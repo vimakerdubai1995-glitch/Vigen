@@ -90,9 +90,58 @@ def make_look(rgb_slog, p):
     high_w = 6.75 * l ** 2 * (1.0 - l)
     out = out + shadow_w * np.array(p["shadow_tint"]) + high_w * np.array(p["highlight_tint"])
 
-    # Black floor so blacks are deep but not crushed to pure zero
-    out = p["black"] + out * (1.0 - p["black"])
+    if "hue" in p:
+        out = hue_grade(np.clip(out, 0.0, 1.0), p["hue"])
+
+    # Black floor so blacks are deep but not crushed to pure zero.
+    # A colour triple gives tinted ("milky navy") blacks.
+    black = np.array(p["black"], dtype=float)
+    out = black + out * (1.0 - black)
     return np.clip(out, 0.0, 1.0)
+
+
+def rgb_to_hsv(rgb):
+    mx = rgb.max(axis=-1)
+    mn = rgb.min(axis=-1)
+    d = mx - mn
+    s = np.where(mx > 1e-6, d / np.maximum(mx, 1e-6), 0.0)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    dd = np.maximum(d, 1e-9)
+    h = np.where(mx == r, ((g - b) / dd) % 6.0,
+                 np.where(mx == g, (b - r) / dd + 2.0, (r - g) / dd + 4.0)) / 6.0
+    h = np.where(d > 1e-9, h, 0.0)
+    return np.stack([h, s, mx], axis=-1)
+
+
+def hsv_to_rgb(hsv):
+    h, s, v = hsv[..., 0] % 1.0, hsv[..., 1], hsv[..., 2]
+    i = np.floor(h * 6.0)
+    f = h * 6.0 - i
+    p_, q, t = v * (1 - s), v * (1 - s * f), v * (1 - s * (1 - f))
+    i = i.astype(int) % 6
+    r = np.choose(i, [v, q, p_, p_, t, v])
+    g = np.choose(i, [t, v, v, q, p_, p_])
+    b = np.choose(i, [p_, p_, t, v, v, q])
+    return np.stack([r, g, b], axis=-1)
+
+
+def hue_band(h, centre, width):
+    d = np.abs(((h - centre + 0.5) % 1.0) - 0.5)
+    return np.exp(-0.5 * (d / width) ** 2)
+
+
+def hue_grade(rgb, hp):
+    """Hue-selective grading in display space: muted palette, rich warm tones."""
+    hsv = rgb_to_hsv(rgb)
+    h, s, v = hsv[..., 0], hsv[..., 1], hsv[..., 2]
+    warm = hue_band(h, 0.09, 0.07)       # orange / skin / caramel / wood
+    green = hue_band(h, 0.30, 0.07)
+    blue = hue_band(h, 0.60, 0.07)
+    sat_mult = hp["global_sat"] + (hp["warm_sat"] - hp["global_sat"]) * warm
+    s = np.clip(s * sat_mult, 0.0, 1.0)
+    h = h + hp["green_shift"] * green + hp["blue_shift"] * blue
+    v = v * (1.0 - hp.get("green_dark", 0.0) * green * s)
+    return hsv_to_rgb(np.stack([h, s, v], axis=-1))
 
 
 LOOKS = {
@@ -117,6 +166,34 @@ LOOKS = {
         shadow_tint=(-0.008, 0.006, 0.012),
         highlight_tint=(0.022, 0.008, -0.022),
         black=0.015,
+    ),
+    # Low-key cinematic: muted colours, navy blacks, warm skin and wood
+    "VIGEN_Moody_SLog3SGamut3Cine_to_709": dict(
+        exposure=0.0,
+        wb_gain=(1.03, 1.0, 0.96),
+        saturation=1.0,
+        density=0.30,
+        contrast=1.5,
+        grey_out=0.06,
+        shadow_tint=(-0.020, 0.002, 0.014),
+        highlight_tint=(0.018, 0.006, -0.020),
+        black=(0.035, 0.042, 0.055),
+        hue=dict(global_sat=0.72, warm_sat=1.0, green_shift=-0.07,
+                 blue_shift=-0.03, green_dark=0.15),
+    ),
+    # Food / coffee / product: dark, golden-amber, olive greens
+    "VIGEN_Amber_SLog3SGamut3Cine_to_709": dict(
+        exposure=0.0,
+        wb_gain=(1.07, 1.0, 0.88),
+        saturation=1.05,
+        density=0.30,
+        contrast=1.55,
+        grey_out=0.058,
+        shadow_tint=(-0.010, -0.002, 0.010),
+        highlight_tint=(0.024, 0.010, -0.026),
+        black=(0.030, 0.032, 0.036),
+        hue=dict(global_sat=0.80, warm_sat=1.12, green_shift=-0.09,
+                 blue_shift=-0.02, green_dark=0.2),
     ),
 }
 

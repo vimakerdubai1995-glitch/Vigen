@@ -75,9 +75,9 @@ def make_look(rgb_slog, p):
 
     # Tone mapping: blend of per-channel (natural highlight roll-off)
     # and max-RGB ratio-preserving (keeps hues stable in bright colours)
-    per_channel = tone_curve(rgb, p["contrast"], p["grey_out"])
+    per_channel = tone_curve(rgb, p["contrast"], p["grey_out"], p.get("peak", 1.05))
     mx = np.maximum(rgb.max(axis=-1, keepdims=True), 1e-6)
-    ratio = tone_curve(mx, p["contrast"], p["grey_out"]) * rgb / mx
+    ratio = tone_curve(mx, p["contrast"], p["grey_out"], p.get("peak", 1.05)) * rgb / mx
     disp = per_channel * 0.6 + ratio * 0.4
 
     disp = np.clip(disp, 0.0, 1.0)
@@ -194,6 +194,22 @@ LOOKS = {
         black=(0.030, 0.032, 0.036),
         hue=dict(global_sat=0.80, warm_sat=1.12, green_shift=-0.09,
                  blue_shift=-0.02, green_dark=0.2),
+    ),
+    # Sunny airy film: soft contrast, milky warm blacks, cream highlights,
+    # yellow-green grass, cyan sky (golden-hour outdoor, couples, travel)
+    "VIGEN_Airy_SLog3SGamut3Cine_to_709": dict(
+        exposure=0.0,
+        wb_gain=(1.04, 1.0, 0.94),
+        saturation=1.0,
+        density=0.18,
+        contrast=1.2,
+        grey_out=0.135,
+        peak=0.97,
+        shadow_tint=(-0.006, 0.004, 0.010),
+        highlight_tint=(0.016, 0.010, -0.018),
+        black=(0.065, 0.060, 0.050),
+        hue=dict(global_sat=0.82, warm_sat=0.95, green_shift=-0.045,
+                 blue_shift=-0.035, green_dark=0.05),
     ),
 }
 

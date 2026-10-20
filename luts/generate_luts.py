@@ -211,6 +211,20 @@ LOOKS = {
         hue=dict(global_sat=0.82, warm_sat=0.95, green_shift=-0.045,
                  blue_shift=-0.035, green_dark=0.05),
     ),
+    # Punchy sports / teal & orange: contrast, rich reds, teal sky and shadows
+    "VIGEN_Punch_SLog3SGamut3Cine_to_709": dict(
+        exposure=0.0,
+        wb_gain=(1.02, 1.0, 0.98),
+        saturation=1.12,
+        density=0.22,
+        contrast=1.5,
+        grey_out=0.105,
+        shadow_tint=(-0.022, 0.006, 0.020),
+        highlight_tint=(0.020, 0.008, -0.020),
+        black=(0.010, 0.016, 0.020),
+        hue=dict(global_sat=0.95, warm_sat=1.08, green_shift=-0.02,
+                 blue_shift=-0.045, green_dark=0.12),
+    ),
 }
 
 

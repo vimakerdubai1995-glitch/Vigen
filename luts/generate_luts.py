@@ -225,6 +225,21 @@ LOOKS = {
         hue=dict(global_sat=0.95, warm_sat=1.08, green_shift=-0.02,
                  blue_shift=-0.045, green_dark=0.12),
     ),
+    # Bright bridal: high-key, soft contrast, clean creamy whites, peachy skin
+    "VIGEN_Bridal_SLog3SGamut3Cine_to_709": dict(
+        exposure=0.0,
+        wb_gain=(1.03, 1.0, 0.97),
+        saturation=0.98,
+        density=0.12,
+        contrast=1.12,
+        grey_out=0.165,
+        peak=0.985,
+        shadow_tint=(-0.004, 0.000, 0.006),
+        highlight_tint=(0.008, 0.004, -0.004),
+        black=(0.035, 0.032, 0.030),
+        hue=dict(global_sat=0.82, warm_sat=1.0, green_shift=-0.05,
+                 blue_shift=-0.01, green_dark=0.05),
+    ),
 }
 
 

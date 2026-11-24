@@ -1,0 +1,774 @@
+<title>Раскадровка «Заряд»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@600;800&display=swap">
+<style>
+/* Layout: production board. Hero with the 25-second scene strip, sticky toolbar, storyboard grid grouped by scene or by shooting block, then top-down blocking diagrams and on-set reference cards. */
+:root{
+  --bg:#E8ECED; --surface:#F7F9F9; --ink:#12171A; --muted:#55626A; --line:#C8D1D5;
+  --yellow:#F2BF0F; --blue:#2AA6E2; --mark:#CF3D27; --on-accent:#12171A;
+  --paper:#FFFFFF; --sky:#E2EDF2; --water:#C2DBE5; --wave:#86B1C2; --foam:#FFFFFF;
+  --skyline:#C9D6DC; --sun:#F7E3A0; --sketch:#1A2125; --pier:#E2DBCF;
+  --font-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --font-body:"Golos Text","Segoe UI",Roboto,system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1114; --surface:#151B1F; --ink:#E5EBEE; --muted:#93A2A9; --line:#2A343B;
+    --yellow:#F2C21C; --blue:#38B0EC; --mark:#FF6A4D; --on-accent:#0D1114;
+    --paper:#29333A; --sky:#16232B; --water:#173544; --wave:#2F5B6E; --foam:#9CC4D4;
+    --skyline:#22323B; --sun:#5A4C1E; --sketch:#DDE5E9; --pier:#302B25;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1114; --surface:#151B1F; --ink:#E5EBEE; --muted:#93A2A9; --line:#2A343B;
+  --yellow:#F2C21C; --blue:#38B0EC; --mark:#FF6A4D; --on-accent:#0D1114;
+  --paper:#29333A; --sky:#16232B; --water:#173544; --wave:#2F5B6E; --foam:#9CC4D4;
+  --skyline:#22323B; --sun:#5A4C1E; --sketch:#DDE5E9; --pier:#302B25;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{text-wrap:balance}
+a{color:inherit;text-underline-offset:3px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+
+/* hero */
+.hero{padding-block:40px 8px}
+.eyebrow{margin:0;font:600 12px/1.4 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font:800 clamp(56px,12vw,140px)/.9 var(--font-display);letter-spacing:-.01em;margin:10px 0 18px}
+.lede{max-width:62ch;font-size:17px;margin:0 0 18px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;padding:0;margin:0;font-size:13px;color:var(--muted)}
+.facts b{font:600 16px var(--font-mono);color:var(--ink);margin-right:4px;font-variant-numeric:tabular-nums}
+
+.tl{display:flex;height:46px;margin-top:30px;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}
+.tl button{flex:var(--d) 1 0;min-width:0;border:0;border-right:1.5px solid var(--ink);padding:0;cursor:pointer;font:600 12px var(--font-mono);color:var(--on-accent);transition:filter .15s}
+.tl button:last-child{border-right:0}
+.tl button:hover{filter:brightness(1.08) saturate(1.1)}
+.c-y{background:var(--yellow)} .c-b{background:var(--blue)}
+.c-yb{background:linear-gradient(90deg,var(--yellow),var(--blue))}
+.c-n{background:var(--paper);color:var(--ink)!important}
+.ticks{position:relative;height:20px;margin-top:4px;font:500 11px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.ticks span:first-child{transform:none}
+.ticks span:last-child{transform:translateX(-100%)}
+.scenes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr));gap:2px 16px;list-style:none;padding:0;margin:14px 0 0}
+.scenes button{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:baseline;width:100%;padding:6px 0;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer}
+.scenes button:hover .snm{text-decoration:underline;text-underline-offset:3px}
+.sn{font:600 12px var(--font-mono)}
+.snm{font-weight:500;font-size:14px}
+.stc{font:500 11px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+
+.toc{display:flex;flex-wrap:wrap;gap:6px 20px;margin:26px 0 0;padding:0;list-style:none;font-size:14px}
+
+/* toolbar */
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line);margin-top:28px}
+.tb-in{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.tb-lab{font:600 11px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.check{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;cursor:pointer}
+.check input{width:16px;height:16px;margin:0;accent-color:var(--ink)}
+.progress{margin-left:auto;font:500 13px var(--font-mono);font-variant-numeric:tabular-nums}
+.progress b{font-weight:600}
+.btn-ghost{border:1px solid var(--line);background:transparent;border-radius:4px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--muted)}
+.btn-ghost.armed{border-color:var(--mark);color:var(--mark)}
+
+.key{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;margin:18px 0 0;font-size:12.5px;color:var(--muted)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid var(--ink)}
+.sw-line{width:22px;height:0;border:0;border-top:2px dashed var(--mark);border-radius:0}
+
+/* storyboard */
+.group{margin-top:34px;scroll-margin-top:72px}
+.ghead{display:flex;gap:18px;align-items:flex-start;padding-bottom:14px;margin-bottom:16px;border-bottom:1.5px solid var(--ink)}
+.gnum{font:800 44px/1 var(--font-display);min-width:1.1em}
+.gtxt{min-width:0}
+.ghead h3{font:600 21px/1.2 var(--font-display);margin:2px 0 6px}
+.gmeta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin:0;font:500 12px var(--font-mono);color:var(--muted)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font:600 11px var(--font-body);color:var(--on-accent);letter-spacing:.02em}
+.pill.c-n{border:1px solid var(--line)}
+.gdesc{margin:8px 0 0;max-width:72ch;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,272px),1fr));gap:18px}
+.shot{display:flex;flex-direction:column;gap:10px;min-width:0;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.shot-h{display:flex;align-items:center;gap:10px;font:600 12px var(--font-mono)}
+.sid{display:inline-grid;place-items:center;min-width:36px;height:24px;padding:0 6px;border-radius:4px;border:1px solid var(--line);background:var(--paper)}
+.shot[data-car="y"] .sid{background:var(--yellow);color:var(--on-accent);border-color:transparent}
+.shot[data-car="b"] .sid{background:var(--blue);color:var(--on-accent);border-color:transparent}
+.dur{color:var(--muted);font-weight:500}
+.fps{margin-left:auto;padding:2px 7px;border:1px solid var(--ink);border-radius:3px;font-size:11px}
+.fps.hi{background:var(--ink);color:var(--bg)}
+.frame{margin:0;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--sky)}
+.shot-b{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.shot h4{margin:0;font:600 15.5px/1.3 var(--font-body)}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:13px;line-height:1.4}
+.spec dt{font:500 10.5px/1.75 var(--font-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.spec dd{margin:0;min-width:0}
+.note{margin:0;font-size:13px;line-height:1.45;color:var(--muted)}
+.shot-f{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.tag{font:500 11px var(--font-mono);color:var(--muted)}
+.shot.is-done .frame,.shot.is-done .shot-b{opacity:.45}
+.shot.is-done .done{color:var(--ink)}
+
+/* sketch frames */
+.sk{display:block;width:100%;height:auto;max-width:100%}
+.sk *{vector-effect:non-scaling-stroke}
+.sk .k{fill:none;stroke:var(--sketch);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sk .k1{fill:none;stroke:var(--sketch);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.sk .kthick{fill:none;stroke:var(--sketch);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.sk .kwheel{fill:none;stroke:var(--sketch);stroke-width:6}
+.sk .ky{fill:var(--yellow);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .kb{fill:var(--blue);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .kp{fill:var(--paper);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .kink{fill:var(--sketch);stroke:var(--sketch);stroke-width:1;stroke-linejoin:round}
+.sk .kglass{fill:var(--sky);stroke:var(--sketch);stroke-width:1.5;stroke-linejoin:round}
+.sk .ks{fill:var(--sky)}
+.sk .kw{fill:var(--water)}
+.sk .kw1{fill:none;stroke:var(--wave);stroke-width:1.4;stroke-linecap:round}
+.sk .ksun{fill:var(--sun)}
+.sk .kskl{fill:var(--skyline)}
+.sk .kbok{fill:var(--foam);opacity:.4}
+.sk .kdrop{fill:var(--foam);fill-opacity:.6;stroke:var(--sketch);stroke-width:1}
+.sk .kspr{fill:none;stroke:var(--sketch);stroke-width:1.3;stroke-linecap:round;stroke-dasharray:6 4}
+.sk .kghost{fill:none;stroke:var(--sketch);stroke-width:1.5;stroke-dasharray:5 4;opacity:.6}
+.sk .kblur{stroke:var(--muted);stroke-width:2.5;stroke-linecap:round;opacity:.5}
+.sk .kpier{fill:var(--pier);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .lo{fill:none;stroke:var(--sketch);stroke-linecap:round;vector-effect:none}
+.sk .li{fill:none;stroke:var(--paper);stroke-linecap:round;vector-effect:none}
+.sk .am{fill:none;stroke:var(--mark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sk .amd{fill:none;stroke:var(--mark);stroke-width:1.8;stroke-dasharray:6 5;stroke-linecap:round}
+.sk .kinset{fill:var(--paper);stroke:var(--mark);stroke-width:1.5}
+.sk .at{fill:var(--mark);font:600 10.5px var(--font-mono);letter-spacing:.06em;paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+.sk .crop{opacity:0;transition:opacity .2s}
+.show-crop .sk .crop{opacity:1}
+.sk .cropdim{fill:var(--bg);opacity:.8}
+.sk .cropline{stroke:var(--mark);stroke-width:1.2;stroke-dasharray:4 3}
+
+/* diagrams */
+.dg .dw{fill:var(--water)}
+.dg .dpier{fill:var(--pier);stroke:var(--sketch);stroke-width:1.5}
+.dg .dplank{stroke:var(--sketch);stroke-opacity:.22;stroke-width:1}
+.dg .dwake{fill:none;stroke:var(--foam);stroke-width:2;stroke-dasharray:5 4;stroke-linecap:round}
+.dg .dwave{fill:none;stroke:var(--wave);stroke-width:1.6;stroke-linecap:round}
+.dg .alt{fill-opacity:.4;stroke-dasharray:4 3}
+.dg .dchip{fill:var(--paper);stroke:var(--sketch);stroke-width:1.2}
+.dg .dchipt{font:700 8.5px var(--font-body);fill:var(--ink)}
+.dg .dcone{fill:var(--mark);fill-opacity:.14;stroke:var(--mark);stroke-width:1.2}
+.dg .dcone2{fill:none;stroke:var(--mark);stroke-width:1.1;stroke-dasharray:3 3}
+.dg .dcam{fill:var(--sketch)}
+.dg .dspray{fill:var(--foam);fill-opacity:.45;stroke:var(--sketch);stroke-width:1;stroke-dasharray:3 3}
+.dg .dl,.dg .dlp,.dg .dlb{font:500 10px var(--font-mono);fill:var(--ink);paint-order:stroke;stroke:var(--water);stroke-width:3px;stroke-linejoin:round}
+.dg .dlp{stroke:var(--pier)}
+.dg .dlb{font:600 11.5px var(--font-body)}
+.dg .ddim{stroke:var(--sketch);stroke-width:1}
+.dg .darr{fill:none;stroke:var(--sketch);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.dg .dsun{fill:var(--sun);stroke:var(--sketch);stroke-width:1.2}
+.dg .ddiv{stroke:var(--sketch);stroke-opacity:.45;stroke-dasharray:4 4}
+.dg .dtable{fill:var(--paper);stroke:var(--sketch);stroke-width:1.2}
+
+/* sections */
+.sec{padding-block:20px 0}
+.sec h2{font:600 clamp(24px,3.2vw,32px)/1.15 var(--font-display);margin:44px 0 8px}
+.sec-intro{margin:0 0 20px;max-width:68ch;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 18px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend svg.sk{flex:none;display:inline-block}
+.diagrams{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:18px}
+.dcard{display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.dcard-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.blk{display:inline-grid;place-items:center;width:26px;height:26px;border:1.5px solid var(--ink);border-radius:4px;font:800 13px var(--font-display)}
+.dcard h3{margin:0;font:600 16px/1.25 var(--font-body)}
+.dcard .ids{font:500 11.5px var(--font-mono);color:var(--muted);margin-left:auto}
+.dcard .frame{background:var(--water)}
+.dcard ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.45;display:flex;flex-direction:column;gap:4px}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+td .ids{font:500 12px var(--font-mono);white-space:nowrap}
+td.bk{white-space:nowrap;font-weight:600}
+td.bk .blk{margin-right:8px;vertical-align:middle}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid var(--ink);margin-right:6px;vertical-align:1px}
+
+.swap{margin-top:18px;padding:14px 16px;border:1.5px dashed var(--mark);border-radius:6px;display:grid;grid-template-columns:auto 1fr;gap:6px 18px;align-items:start}
+.swap h3{margin:0;font:600 14px var(--font-display);grid-row:span 2}
+.swap ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+.swap li::before{content:"□";margin-right:6px;font-family:var(--font-mono);color:var(--mark)}
+
+.refgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:18px}
+.ref{padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:6px;min-width:0}
+.ref h3{margin:0 0 12px;font:600 17px var(--font-display)}
+.rows{margin:0;display:grid;grid-template-columns:auto 1fr;gap:9px 14px;font-size:14px;line-height:1.4}
+.rows dt{font:600 12px/1.6 var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rows dd{margin:0;min-width:0}
+.rows dd small{display:block;color:var(--muted);font-size:12.5px}
+.ref-foot{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.techgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px 22px;margin:0}
+.techgrid div{min-width:0}
+.techgrid dt{font:600 11px var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.techgrid dd{margin:0;font-size:14px;line-height:1.45}
+.foot{padding-block:36px 48px;font-size:12.5px;color:var(--muted)}
+
+@media (max-width:560px){
+  .progress{margin-left:0}
+  .ghead{gap:12px}
+  .gnum{font-size:34px}
+  .swap{grid-template-columns:1fr}
+  .swap h3{grid-row:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Раскадровка и схема · версия с одной камерой</p>
+    <h1>ЗАРЯД</h1>
+    <p class="lede">Глоток заводит машину. Каждая банка запускает свою: жёлтая банка жёлтую машину, синяя голубую. Вторая машина служит площадкой для оператора: герой едет на жёлтой, оператор снимает из голубой, потом наоборот.</p>
+    <ul class="facts">
+      <li><b>20–25</b>сек</li><li><b>8</b>сцен</li><li><b>17</b>кадров</li><li><b>4</b>блока съёмки</li><li><b>2</b>машины</li><li><b>1</b>камера</li>
+    </ul>
+    <div class="tl" id="tl" role="group" aria-label="Хронометраж по сценам"></div>
+    <div class="ticks" aria-hidden="true"><span style="left:0">0 с</span><span style="left:20%">5</span><span style="left:40%">10</span><span style="left:60%">15</span><span style="left:80%">20</span><span style="left:100%">25 с</span></div>
+    <ol class="scenes" id="sceneList"></ol>
+    <ul class="toc">
+      <li><a href="#board-sec">Раскадровка</a></li>
+      <li><a href="#scheme">Схема</a></li>
+      <li><a href="#crew">Порядок и кто где</a></li>
+      <li><a href="#sound">Звук и монтаж</a></li>
+      <li><a href="#tech">Техника</a></li>
+    </ul>
+  </header>
+</div>
+
+<section id="board-sec">
+  <div class="toolbar">
+    <div class="wrap tb-in">
+      <span class="tb-lab">Порядок</span>
+      <div class="seg" role="group" aria-label="Порядок кадров">
+        <button type="button" id="v-edit" aria-pressed="true">Монтаж</button>
+        <button type="button" id="v-shoot" aria-pressed="false">Съёмка</button>
+      </div>
+      <label class="check" for="crop"><input type="checkbox" id="crop"> Кроп 9:16</label>
+      <span class="progress">Снято <b id="doneN">0</b>/17</span>
+      <button type="button" class="btn-ghost" id="reset">Сбросить отметки</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="key">
+      <span><i class="sw c-y"></i>жёлтая половина ролика</span>
+      <span><i class="sw c-b"></i>голубая половина</span>
+      <span><i class="sw sw-line"></i>движение камеры, бросок, подсказки</span>
+      <span><b style="font:600 11px var(--font-mono);padding:1px 6px;border-radius:3px;background:var(--ink);color:var(--bg)">120 fps</b>замедление</span>
+    </div>
+    <div id="board"></div>
+  </div>
+</section>
+
+<section id="scheme" class="wrap sec">
+  <h2>Схема</h2>
+  <p class="sec-intro">Вид сверху, не в масштабе: расстояния подписаны. Машины идут слева направо. Водитель сидит слева, оператор справа на пассажирском месте, поэтому снимаемая машина всегда идёт с правого борта камерной.</p>
+  <div class="legend" id="legend"></div>
+  <div class="diagrams" id="diagrams"></div>
+</section>
+
+<section id="crew" class="wrap sec">
+  <h2>Порядок съёмки и кто где</h2>
+  <p class="sec-intro">Четыре блока. Камера переезжает с пирса на воду один раз, машины меняются один раз, между блоками C и D.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Блок</th><th>Кадры</th><th>Герой</th><th>Ваш водитель</th><th>Оператор</th><th>Звук на телефон</th></tr></thead>
+      <tbody>
+        <tr><td class="bk"><span class="blk">A</span>Пирс</td><td><span class="ids">1A 6B 3B 8A</span></td><td>Руки в макро, потом <span class="dot c-y"></span>жёлтая на старте</td><td><span class="dot c-b"></span>Голубая: пролёт мимо пирса</td><td>На пирсе: стол, потом край у воды</td><td>Пшик, сминание, мотор со старта и пролёта, волна</td></tr>
+        <tr><td class="bk"><span class="blk">B</span>Жёлтая на холостых</td><td><span class="ids">2A 3A</span></td><td><span class="dot c-y"></span>За рулём жёлтой</td><td><span class="dot c-b"></span>Голубая рядом, страховка</td><td>Пассажир жёлтой</td><td>Холостые, газ с места</td></tr>
+        <tr><td class="bk"><span class="blk">C</span>Жёлтый заезд</td><td><span class="ids">4A 4B 4C 4D 5A</span></td><td><span class="dot c-y"></span>Жёлтая</td><td><span class="dot c-b"></span>Голубая</td><td>Пассажир голубой</td><td>Камера пишет реф-звук</td></tr>
+        <tr><td class="bk"><span class="blk">D</span>Голубой заезд</td><td><span class="ids">5B 6A 7A 7B 7C 7D</span></td><td><span class="dot c-b"></span>Голубая</td><td><span class="dot c-y"></span>Жёлтая</td><td>Пассажир жёлтой</td><td>Камера пишет реф-звук</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="swap">
+    <h3>Пересадка C → D</h3>
+    <ul>
+      <li>Герой в голубую, водитель и оператор в жёлтую</li>
+      <li>Объектив тот же, что в 5A</li>
+      <li>25 fps, 1/50</li>
+      <li>Солнце с той же стороны, что в 5A</li>
+      <li>Полная синяя банка у героя для 6A</li>
+      <li>Первым снять 5B</li>
+    </ul>
+  </div>
+</section>
+
+<section id="sound" class="wrap sec">
+  <h2>Звук и монтаж</h2>
+  <div class="refgrid">
+    <div class="ref">
+      <h3>Звуки на телефон</h3>
+      <dl class="rows">
+        <dt>Пшик</dt><dd>Жёлтая и синяя банка, по 5 дублей<small>Пирс, блок A, сразу после макро</small></dd>
+        <dt>Сминание</dt><dd>5 дублей, медленно и резко<small>Пирс, блок A</small></dd>
+        <dt>Глотки</dt><dd>3 дубля, по желанию<small>Пирс или в машине на холостых</small></dd>
+        <dt>Газ</dt><dd>Холостые, потом старт с места<small>С пирса во время 3B</small></dd>
+        <dt>Пролёт</dt><dd>Машина мимо пирса<small>С пирса во время 8A</small></dd>
+        <dt>Волна</dt><dd>Удар о пирс, банки падают в воду<small>8A, отдельный дубль без машины, если шумно</small></dd>
+      </dl>
+      <p class="ref-foot">Телефон в 10–15 см от источника, ветрозащита хотя бы из поролона, диктофон без шумоподавления.</p>
+    </div>
+    <div class="ref">
+      <h3>Монтажные метки</h3>
+      <dl class="rows">
+        <dt>0:00</dt><dd>Пшик перетекает в рёв мотора</dd>
+        <dt>0:04</dt><dd>Последний глоток, банку в сторону</dd>
+        <dt>0:05</dt><dd>Жёсткая склейка 3A → 3B на брызги</dd>
+        <dt>0:05–0:12</dt><dd>Ч/б вспышки по 2–3 кадра на сильные доли</dd>
+        <dt>0:13</dt><dd>Склейка 5A → 5B в середине смаза</dd>
+        <dt>0:15</dt><dd>Смятая банка, газ</dd>
+        <dt>0:21–0:25</dt><dd>Финал держать до падения банок</dd>
+      </dl>
+      <p class="ref-foot">120 fps на таймлайне 25p дают замедление 4,8×. На битах разгонять до реальной скорости.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tech" class="wrap sec">
+  <h2>Техника и безопасность</h2>
+  <dl class="techgrid">
+    <div><dt>Частоты</dt><dd>25 fps и 1/50 для глотков, старта и переходов. 120 fps и 1/250 для заездов, брызг и финала.</dd></div>
+    <div><dt>Рывки</dt><dd>Только в 25 fps. В 120 fps смаза почти нет, и склейку видно.</dd></div>
+    <div><dt>Фильтры</dt><dd>ВариND обязателен для 1/250 на солнце. Поляризатор снимает блики с воды и делает небо плотнее.</dd></div>
+    <div><dt>Свет</dt><dd>Утро или золотой час. Брызги снимать против солнца: в контровом они светятся.</dd></div>
+    <div><dt>Жара</dt><dd>120 fps греет камеру. Между дублями держать её в тени, взять запасные аккумуляторы.</dd></div>
+    <div><dt>Защита камеры</dt><dd>Чехол от брызг, прозрачный защитный фильтр, микрофибра, страховочный трос в машине.</dd></div>
+    <div><dt>Банки</dt><dd>Для броска пустая, с 1,5–2 м. В финале банки на леске. В воде ни одной не оставлять.</dd></div>
+    <div><dt>Люди</dt><dd>Жилеты на всех в машинах. Скорость и дистанцию на сближениях решает водитель, не оператор.</dd></div>
+  </dl>
+</section>
+
+<div class="wrap foot">Отметки «снято» и выбранный порядок хранятся только в этом браузере.</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- svg helpers ---------- */
+const f=n=>Math.round(n*10)/10;
+const P=(d,c)=>`<path d="${d}" class="${c}"/>`;
+const C=(x,y,r,c)=>`<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" class="${c}"/>`;
+const E=(x,y,rx,ry,c,rot)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" class="${c}"${rot?` transform="rotate(${rot} ${x} ${y})"`:''}/>`;
+const R=(x,y,w,h,c,rx,extra)=>`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}"${rx?` rx="${rx}"`:''} class="${c}"${extra?' '+extra:''}/>`;
+const L=(x1,y1,x2,y2,c)=>`<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="${c}"/>`;
+const T=(x,y,s,c,a)=>`<text x="${f(x)}" y="${f(y)}" class="${c}"${a?` text-anchor="${a}"`:''}>${s}</text>`;
+function rng(seed){let s=(seed*2654435761)>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};}
+
+function head(x,y,a,c,h){h=h||7;const p1=[x-h*Math.cos(a-0.45),y-h*Math.sin(a-0.45)],p2=[x-h*Math.cos(a+0.45),y-h*Math.sin(a+0.45)];return `<path d="M${f(p1[0])},${f(p1[1])} L${f(x)},${f(y)} L${f(p2[0])},${f(p2[1])}" class="${c}"/>`;}
+function arrow(x1,y1,x2,y2,c){c=c||'am';return L(x1,y1,x2,y2,c)+head(x2,y2,Math.atan2(y2-y1,x2-x1),c==='amd'?'am':c);}
+function carrow(x1,y1,cx,cy,x2,y2,c){c=c||'am';return `<path d="M${x1},${y1} Q${cx},${cy} ${x2},${y2}" class="${c}"/>`+head(x2,y2,Math.atan2(y2-cy,x2-cx),c==='amd'?'am':c);}
+function arcArrow(cx,cy,r,a0,a1,c){c=c||'am';const t0=a0*Math.PI/180,t1=a1*Math.PI/180;const p0=[cx+r*Math.cos(t0),cy+r*Math.sin(t0)],p1=[cx+r*Math.cos(t1),cy+r*Math.sin(t1)];const sweep=a1>a0?1:0,large=Math.abs(a1-a0)>180?1:0;const tang=t1+(sweep?Math.PI/2:-Math.PI/2);return `<path d="M${f(p0[0])},${f(p0[1])} A${r},${r} 0 ${large} ${sweep} ${f(p1[0])},${f(p1[1])}" class="${c}"/>`+head(p1[0],p1[1],tang,c);}
+function limb(d,w){return `<path d="${d}" class="lo" style="stroke-width:${w+4}px"/><path d="${d}" class="li" style="stroke-width:${w}px"/>`;}
+function drops(seed,n,x0,y0,x1,y1,r0,r1){const r=rng(seed);let g='';for(let i=0;i<n;i++)g+=C(x0+r()*(x1-x0),y0+r()*(y1-y0),r0+r()*(r1-r0),'kdrop');return g;}
+function waves(hy,seed,x0,x1){x0=x0==null?-40:x0;x1=x1==null?360:x1;const r=rng(seed);let g='',y=hy+5,step=4;while(y<220){const len=5+Math.max(0,y-hy)*0.14;for(let i=0;i<7;i++){const x=x0+r()*(x1-x0);g+=P(`M${f(x)},${f(y)} q${f(len/2)},${f(-len*0.22)} ${f(len)},0`,'kw1');}y+=step;step*=1.28;}return g;}
+function skyline(hy,seed){const r=rng(seed+7);let g='',x=-10;while(x<330){const w=6+r()*14,h=3+r()*15;g+=R(x,hy-h,w,h,'kskl');x+=w+r()*12;}return g;}
+function scene(hy,seed,o){o=o||{};let g=R(-40,-40,400,hy+40,'ks')+R(-40,hy,400,260-hy,'kw');if(o.sun)g+=C(o.sun[0],o.sun[1],o.sun[2]||14,'ksun');if(o.skyline)g+=skyline(hy,seed);g+=L(-40,hy,360,hy,'k1')+waves(hy,seed);return g;}
+const WAVE16='q5,-3 10,0'+' t10,0'.repeat(15);
+function waterCover(x0,w){return P(`M${x0},-3 ${WAVE16.replace(/10,0/g,f(w/16)+',0').replace('q5','q'+f(w/32))} L${x0+w},10 L${x0},10 Z`,'kw')+P(`M${x0},-3 ${WAVE16.replace(/10,0/g,f(w/16)+',0').replace('q5','q'+f(w/32))}`,'kw1');}
+function fillOf(col){return col==='y'?'ky':col==='b'?'kb':'kghost';}
+function spraySide(k){let g='';
+  g+=P(`M-62,-4 Q${-80-20*k},${-40-20*k} ${-120-40*k},${-30-10*k}`,'kspr');
+  g+=P(`M-60,-2 Q${-90-20*k},${-24-14*k} ${-130-40*k},-8`,'kspr');
+  g+=P(`M-64,-6 Q${-72-10*k},${-50-26*k} ${-96-26*k},${-56-26*k}`,'kspr');
+  [[-100,-40],[-118,-30],[-90,-56],[-132,-18],[-108,-12],[-80,-34],[-124,-44]].forEach(([px,py],i)=>{g+=C(px*(1+0.25*(k-1)),py*(1+0.3*(k-1)),1.6+(i%3)*0.6,'kdrop');});
+  g+=P('M64,-4 Q76,-14 88,-8','kspr');return g;}
+function carSide(x,y,s,col,dir,o){o=o||{};dir=dir||1;let g='';
+  if(o.spray)g+=spraySide(o.spray);
+  g+=P('M-64,-2 L-66,-17 Q-63,-23 -50,-24 L-30,-25 Q-18,-38 2,-38 Q16,-37 26,-26 L50,-23 Q64,-20 66,-10 L65,-2 Z',fillOf(col));
+  if(col!=='g'){g+=P('M-24,-26 Q-14,-35 0,-35 Q12,-34 20,-26 Z','kglass')+C(-6,-30,5,'kink')+L(-58,-13,58,-13,'k1')+P('M-52,-2 A12,12 0 0 1 -28,-2 M30,-2 A12,12 0 0 1 54,-2','k1');}
+  g+=waterCover(-80,160);
+  return `<g transform="translate(${x} ${y}) scale(${dir*s} ${s})">${g}</g>`;}
+function tail(k){let g='';
+  g+=P(`M-6,-6 Q-26,${-50*k} -16,${-84*k}`,'kspr')+P(`M0,-6 Q2,${-60*k} 4,${-96*k}`,'kspr')+P(`M6,-6 Q26,${-50*k} 18,${-82*k}`,'kspr')+P(`M-10,-6 Q-44,${-36*k} -52,${-60*k}`,'kspr')+P(`M10,-6 Q44,${-36*k} 52,${-58*k}`,'kspr');
+  [[-18,-88],[6,-100],[20,-86],[-54,-64],[54,-62],[-34,-76],[36,-74],[-4,-80]].forEach(([px,py],i)=>{g+=C(px,py*k,1.6+(i%3)*0.7,'kdrop');});return g;}
+function carRear(x,y,s,col,o){o=o||{};let g='';
+  if(o.tail)g+=tail(o.tail);
+  g+=P('M-40,-2 L-43,-18 Q-41,-27 -28,-28 L28,-28 Q41,-27 43,-18 L40,-2 Z',fillOf(col));
+  if(col!=='g'){g+=P('M-22,-28 Q-18,-41 0,-42 Q18,-41 22,-28 Z','kglass')+C(-8,-34,5.5,'kink')+R(-37,-21,13,4,'kink',1)+R(24,-21,13,4,'kink',1);}
+  g+=waterCover(-56,112);
+  return `<g transform="translate(${x} ${y}) scale(${s})">${g}</g>`;}
+function can(x,y,s,col,rot){const g=R(-10,-38,20,38,fillOf(col),3)+E(0,-38,10,3.2,'kp')+P('M-3,-31 L3,-22 L-2,-20 L4,-9','k1');return `<g transform="translate(${x} ${y}) rotate(${rot||0}) scale(${s})">${g}</g>`;}
+function crushed(x,y,s,col,rot){const g=P('M-10,0 L-12,-10 L-6,-15 L-12,-21 L-9,-28 L9,-28 L12,-22 L6,-16 L11,-10 L10,0 Z',fillOf(col))+E(0,-28,9,2.8,'kp')+P('M-6,-15 L6,-16 M-12,-10 L11,-10','k1');return `<g transform="translate(${x} ${y}) rotate(${rot||0}) scale(${s})">${g}</g>`;}
+function headFront(x,y,r){return C(x,y,r,'kp')+R(x-r*0.74,y-r*0.3,r*1.48,r*0.4,'kink',r*0.16);}
+const CROP=`<g class="crop" aria-hidden="true"><rect x="0" y="0" width="109.4" height="180" class="cropdim"/><rect x="210.6" y="0" width="109.4" height="180" class="cropdim"/><line x1="109.4" y1="0" x2="109.4" y2="180" class="cropline"/><line x1="210.6" y1="0" x2="210.6" y2="180" class="cropline"/></g>`;
+
+/* ---------- storyboard frames, 320x180 ---------- */
+const FR={
+'1A':()=>{let g=R(0,0,320,180,'kw')+R(0,0,320,70,'ks');
+  g+=C(40,40,22,'kbok')+C(290,30,16,'kbok')+C(70,124,14,'kbok')+C(300,140,26,'kbok')+C(22,160,12,'kbok');
+  g+=R(105,62,150,140,'ky',6)+drops(11,16,112,84,248,176,1.1,2.4);
+  g+=P('M172,96 L194,124 L180,129 L202,166','kthick');
+  g+=E(180,62,75,20,'kp')+E(180,62,64,15,'k1');
+  g+=P('M146,60 Q152,51 164,55 Q163,64 146,60 Z','kink');
+  g+=R(162,52,40,14,'kp',7)+C(192,59,3.5,'k1');
+  g+=`<g transform="rotate(-16 200 59)">${R(198,46,170,26,'kp',13)}${P('M214,49 Q207,59 214,69','k1')}</g>`;
+  g+=L(146,50,132,34,'k1')+L(154,48,150,28,'k1')+L(140,56,120,48,'k1')+L(160,47,168,30,'k1');
+  g+=C(128,30,2,'kdrop')+C(116,44,1.8,'kdrop')+C(146,22,1.6,'kdrop')+C(170,24,1.6,'kdrop');
+  g+=T(12,22,'ПШИК → РЁВ МОТОРА','at');return g;},
+'2A':()=>{let g=R(0,0,320,180,'ks')+C(258,40,18,'ksun');
+  g+=P('M70,180 Q86,138 136,128 L196,128 Q240,136 254,180 Z','kp');
+  g+=P('M146,131 L150,96 L184,92 L188,129 Z','kp');
+  g+=E(168,72,31,25,'kp',-28)+P('M146,92 Q162,104 182,98','k1');
+  g+=limb('M238,150 Q272,108 218,58',15);
+  g+=can(226,40,1.1,'y',-126)+C(213,54,9,'kp');
+  g+=P('M0,162 Q160,150 320,160 L320,180 L0,180 Z','ky');
+  g+=R(64,36,192,108,'amd');
+  g+=arrow(16,12,58,31)+arrow(304,12,262,31)+arrow(16,168,58,149)+arrow(304,168,262,149);
+  g+=T(160,24,'МЕДЛЕННЫЙ НАЕЗД','at','middle');return g;},
+'3A':()=>{let g=scene(100,3);
+  g+=P('M96,180 Q100,114 160,104 Q220,114 224,180 Z','kp');
+  g+=P('M150,106 L152,86 L168,86 L170,106 Z','kp');
+  g+=headFront(160,66,24);
+  g+=limb('M118,124 Q100,140 98,150',13)+limb('M202,124 Q220,140 222,150',13);
+  g+=E(160,158,78,24,'kwheel');
+  g+=C(98,152,11,'kp')+C(222,152,11,'kp');
+  g+=P('M0,172 Q160,164 320,172 L320,180 L0,180 Z','ky');
+  g+=can(50,64,0.8,'y',-70);
+  g+=carrow(124,100,98,64,68,62,'amd');
+  g+=T(12,22,'БАНКУ В САЛОН','at')+T(308,22,'ГАЗ →','at','end');return g;},
+'3B':()=>{let g=scene(84,5,{skyline:1});
+  g+=carSide(196,118,0.95,'y',1,{spray:2});
+  g+=C(30,150,11,'kdrop')+C(62,170,6,'kdrop')+C(292,152,8,'kdrop')+C(262,172,5,'kdrop')+C(14,122,5,'kdrop');
+  g+=arrow(176,62,262,62);
+  g+=T(12,22,'КАМЕРА У САМОЙ ВОДЫ','at');return g;},
+'4A':()=>{let g=scene(72,7,{skyline:1});const r=rng(70);
+  for(let i=0;i<9;i++){const y=96+r()*80,x=-20+r()*300;g+=L(x,y,x+30+r()*50,y,'kw1');}
+  g+=carSide(172,130,1.25,'y',1,{spray:1});
+  g+=arrow(214,50,298,50);
+  g+=T(12,22,'ПАРАЛЛЕЛЬНО · 3–4 М','at');return g;},
+'4B':()=>{let g=R(0,0,320,180,'kw')+waves(-4,9);
+  g+=P('M96,180 Q104,138 150,130 L196,132 Q226,142 234,180 Z','kp');
+  g+=P('M150,134 L153,104 L182,104 L186,134 Z','kp');
+  g+=P('M140,82 Q138,40 176,38 Q206,40 210,64 L217,75 L208,79 Q210,93 200,101 Q188,112 168,110 Q146,108 140,82 Z','kp');
+  g+=P('M140,52 Q118,50 100,58 M141,66 Q120,68 104,76 M146,44 Q130,38 112,40','k1');
+  g+=P('M186,60 L212,61 L210,72 L190,72 Z','kink');
+  g+=E(164,78,5,8,'k1')+L(196,94,206,92,'k1');
+  g+=P('M0,160 Q140,150 320,152 L320,180 L0,180 Z','ky');
+  g+=drops(21,8,226,40,312,130,1.2,2.6);
+  g+=T(12,22,'ТЕЛЕ · ПРОФИЛЬ','at');return g;},
+'4C':()=>{let g=scene(78,13);
+  g+=carRear(198,112,0.95,'y',{tail:1});
+  g+=drops(31,6,10,124,310,176,2,5);
+  g+=arrow(268,142,250,100);
+  g+=T(12,22,'НИЗКО · ВНЕ СТРУИ','at');return g;},
+'4D':()=>{let g=scene(70,17,{skyline:1});
+  g+=carRear(304,150,1.35,'g');
+  g+=carRear(206,104,0.75,'y',{tail:0.7});
+  g+=arrow(282,130,234,110);
+  g+=P('M0,138 Q64,126 122,148 Q142,160 150,180 L0,180 Z','kb');
+  g+=P('M12,148 Q62,138 106,156','k1');
+  g+=T(12,22,'ОБГОН СПРАВА','at');return g;},
+'5A':()=>{let g=scene(92,19);
+  g+=P('M60,142 Q66,100 104,94 Q140,100 148,142 Z','kp');
+  g+=headFront(104,72,20);
+  g+=P('M0,142 Q110,132 210,134 Q280,136 320,130 L320,180 L0,180 Z','ky');
+  g+=limb('M136,108 Q160,96 182,88',13);
+  g+=L(190,96,168,106,'k1')+L(196,108,176,120,'k1')+L(198,84,180,82,'k1');
+  g+=can(234,128,2.1,'b',-30);
+  g+=carrow(160,32,230,8,306,34,'am');
+  g+=T(308,54,'WHIP →','at','end');
+  g+=T(12,22,'БРОСОК В КАМЕРУ','at');return g;},
+'5B':()=>{let g=scene(92,23);const r=rng(5);
+  for(let i=0;i<26;i++){const y=10+r()*150,x=-20+r()*120,w=60+r()*120;g+=L(x,y,x+w,y,'kblur');}
+  g+=P('M168,142 Q174,100 210,94 Q246,100 254,142 Z','kp');
+  g+=headFront(210,72,20);
+  g+=P('M0,136 Q140,128 320,136 L320,180 L0,180 Z','kb');
+  g+=can(244,120,0.85,'b',0)+C(244,106,8,'kp');
+  g+=carrow(14,34,104,8,196,34,'am');
+  g+=T(14,54,'WHIP →','at');
+  g+=T(308,22,'УЖЕ В ГОЛУБОЙ','at','end');return g;},
+'6A':()=>{let g=scene(110,29);
+  g+=P('M116,180 Q122,126 160,118 Q200,126 208,180 Z','kp');
+  g+=P('M150,120 L152,94 L172,94 L174,120 Z','kp');
+  g+=E(160,72,26,23,'kp',24);
+  g+=R(130,58,24,8,'kink',3,'transform="rotate(30 142 62)"');
+  g+=limb('M132,136 Q86,116 110,52',14);
+  g+=can(100,30,1.42,'b',141)+C(111,51,9,'kp');
+  g+=P('M0,162 Q160,154 320,162 L320,180 L0,180 Z','kb');
+  g+=R(222,12,88,62,'kinset',3);
+  g+=crushed(268,66,0.95,'b',0)+R(250,38,36,18,'kp',8);
+  g+=T(228,28,'→ СМЯЛ','at');
+  g+=T(12,22,'ЗАЛПОМ','at');return g;},
+'6B':()=>{let g=R(0,0,320,180,'kw')+R(0,0,320,64,'ks');
+  g+=C(30,40,18,'kbok')+C(140,30,12,'kbok')+C(200,150,20,'kbok')+C(300,40,16,'kbok');
+  g+=R(26,74,108,120,'kb',5)+drops(41,9,32,92,128,176,1.1,2.2);
+  g+=E(80,74,54,15,'kp')+E(80,74,45,11,'k1');
+  g+=P('M58,72 Q63,65 72,68 Q71,75 58,72 Z','kink');
+  g+=R(70,66,30,11,'kp',5.5);
+  g+=`<g transform="rotate(-62 99 71)">${R(97,60,120,22,'kp',11)}</g>`;
+  g+=L(160,0,160,180,'amd');
+  g+=crushed(242,152,2.6,'b',8);
+  g+=R(206,94,74,34,'kp',15)+P('M222,98 L222,124 M238,96 L238,126 M254,96 L254,126','k1');
+  g+=T(12,22,'ВСКРЫТИЕ','at')+T(172,22,'СМИНАНИЕ','at');return g;},
+'7A':()=>{let g=`<g transform="rotate(-6 160 90)">`+scene(70,37,{skyline:1})+carSide(150,136,2.05,'b',1,{spray:1})+'</g>';
+  g+=T(12,22,'1,5–2 М · НАКЛОН ГОРИЗОНТА','at');return g;},
+'7B':()=>{let g=scene(86,43);
+  g+=carSide(178,118,0.85,'b',1,{spray:2});
+  g+=P('M-10,160 Q80,70 210,40','kspr')+P('M-10,180 Q120,90 260,70','kspr')+P('M20,190 Q160,120 330,110','kspr');
+  g+=C(64,58,17,'kdrop')+C(124,124,24,'kdrop')+C(252,68,12,'kdrop')+C(282,142,19,'kdrop')+C(200,162,9,'kdrop')+C(28,136,8,'kdrop')+C(180,30,7,'kdrop');
+  g+=P('M54,52 Q58,46 66,46','k1')+P('M110,114 Q116,106 126,106','k1')+P('M270,134 Q275,128 283,128','k1');
+  g+=T(12,22,'КАПЛИ НА ЛИНЗЕ · ОСТАВИТЬ','at');return g;},
+'7C':()=>{let g=`<g transform="rotate(5 160 90)">`+R(-40,-40,400,140,'ks')+R(-40,100,400,140,'kw')+L(-40,100,360,100,'k1')+waves(100,47);
+  g+=P('M60,200 Q72,138 160,130 Q248,138 260,200 Z','kp');
+  g+=P('M140,132 L142,112 L178,112 L180,132 Z','kp');
+  g+=E(160,78,44,50,'kp');
+  g+=P('M116,64 Q120,24 162,26 Q202,28 206,64 Q188,44 160,46 Q132,44 116,64 Z','kink');
+  g+=P('M112,46 Q96,36 84,40 M118,36 Q104,22 92,22','k1');
+  g+=R(124,68,32,16,'kink',6)+R(164,68,32,16,'kink',6)+L(156,74,164,74,'k');
+  g+=P('M144,104 Q160,120 176,104 Q160,110 144,104 Z','kink');
+  g+=P('M-40,172 Q160,158 360,172 L360,230 L-40,230 Z','kb');
+  g+=drops(53,10,30,20,300,150,1.4,3.2)+'</g>';
+  g+=T(12,22,'ШИРОКИЙ УГОЛ ВБЛИЗИ','at');return g;},
+'7D':()=>{let g=scene(70,59,{skyline:1});
+  g+=P('M252,72 L330,66 L330,104 L244,84 Z','kpier')+P('M244,84 L330,104 L330,114 L244,92 Z','kpier');
+  [0.1,0.35,0.6,0.85].forEach(t=>{const x=244+86*t,y=92+22*t;g+=L(x,y,x,y+12+10*t,'k');});
+  [0.25,0.5,0.75].forEach(t=>{g+=L(252-8*t+0,72+12*t,330,66+38*t,'k1');});
+  g+=carSide(140,114,0.8,'b',1,{spray:1});
+  g+=arrow(192,90,236,80);
+  g+=T(12,22,'К ПИРСУ','at');return g;},
+'8A':()=>{let g=R(0,0,320,104,'ks')+R(0,104,320,30,'kw')+skyline(104,61)+L(0,104,320,104,'k1')+waves(104,61);
+  g+=carSide(236,114,0.9,'b',1,{spray:1});
+  g+=P('M40,126 Q100,116 170,126','k1')+P('M150,124 Q210,114 290,124','k1');
+  g+=R(-2,132,324,50,'kpier');
+  [-160,-80,0,80,160,240,320,400,480].forEach(bx=>{const xi=160+(bx-160)*(28/76);g+=L(xi,132,bx,180,'k1');});
+  g+=L(0,132,320,132,'kthick');
+  g+=P('M110,132 Q112,104 124,94','kspr')+P('M140,132 Q144,96 158,86','kspr')+P('M178,132 Q186,100 202,96','kspr')+P('M200,132 Q214,110 226,108','kspr');
+  g+=drops(67,10,104,82,230,126,1.4,3);
+  g+=crushed(144,134,1.5,'y',-6)+crushed(178,134,1.5,'b',8);
+  g+=carrow(138,84,130,66,118,80,'am')+carrow(182,84,190,66,202,80,'am');
+  g+=T(12,22,'ВОЛНА СБИВАЕТ БАНКИ','at');return g;}
+};
+
+/* ---------- top-down diagrams, 400x240 ---------- */
+const SEATS=[[-7,-7.5],[-7,7.5]];
+function seatPos(x,y,ang,i,s){s=s||1;const r=ang*Math.PI/180,[lx,ly]=SEATS[i];return [x+s*(lx*Math.cos(r)-ly*Math.sin(r)),y+s*(lx*Math.sin(r)+ly*Math.cos(r))];}
+function carTop(x,y,ang,col,o){o=o||{};const s=o.s||1;let g='';
+  if(o.wake)g+=P('M-30,-11 L-120,-40 M-30,11 L-120,40','dwake');
+  g+=R(-29,-15,58,30,(col==='y'?'ky':'kb')+(o.alt?' alt':''),10);
+  g+=P('M8,-12 Q16,0 8,12','k1')+P('M-20,-12 Q-25,0 -20,12','k1');
+  return `<g transform="translate(${x} ${y}) rotate(${ang}) scale(${s})">${g}</g>`;}
+function chips(x,y,ang,labels,s){let g='';labels.forEach((lb,i)=>{if(!lb)return;const [px,py]=seatPos(x,y,ang,i,s);g+=C(px,py,6.5,'dchip')+T(px,py+3,lb,'dchipt','middle');});return g;}
+function chip(x,y,lb){return C(x,y,6.5,'dchip')+T(x,y+3,lb,'dchipt','middle');}
+function cam(x,y,ang,len,fov,cls){cls=cls||'dcone';const r=ang*Math.PI/180,h=fov/2*Math.PI/180;const a=[x+len*Math.cos(r-h),y+len*Math.sin(r-h)],b=[x+len*Math.cos(r+h),y+len*Math.sin(r+h)];return `<path d="M${f(x)},${f(y)} L${f(a[0])},${f(a[1])} A${len},${len} 0 0 1 ${f(b[0])},${f(b[1])} Z" class="${cls}"/>`;}
+function camBody(x,y,ang){return R(x-4,y-3,8,6,'dcam',1,`transform="rotate(${ang} ${f(x)} ${f(y)})"`);}
+function dim(x1,y1,x2,y2,label){const a=Math.atan2(y2-y1,x2-x1),nx=-Math.sin(a)*5,ny=Math.cos(a)*5;return L(x1,y1,x2,y2,'ddim')+L(x1-nx,y1-ny,x1+nx,y1+ny,'ddim')+L(x2-nx,y2-ny,x2+nx,y2+ny,'ddim')+T((x1+x2)/2+8,(y1+y2)/2+4,label,'dl');}
+function opCar(x,y,ang,col,camAng,len,fov,o){o=o||{};const p=seatPos(x,y,ang,1);let g=carTop(x,y,ang,col,o);if(o.camStart!=null)g+=cam(p[0],p[1],o.camStart,o.startLen||46,fov,'dcone2');g+=cam(p[0],p[1],camAng,len,fov)+camBody(p[0],p[1],camAng)+chips(x,y,ang,['В','О']);return g;}
+
+const DG={
+pier:()=>{let g=R(0,0,400,240,'dw');
+  g+=P('M150,150 Q200,138 250,150','dwave')+P('M138,162 Q200,150 264,162','dwave');
+  g+=arrow(18,96,384,96,'darr');
+  g+=carTop(292,96,0,'b',{wake:1})+chips(292,96,0,['В',null]);
+  g+=T(292,74,'8A · пролёт','dl','middle');
+  g+=dim(352,111,352,176,'3–5 м');
+  g+=carTop(84,128,-150,'y',{wake:1})+chips(84,128,-150,['Г',null]);
+  g+=arrow(52,110,24,94,'darr');
+  g+=R(0,176,400,64,'dpier');for(let x=16;x<400;x+=16)g+=L(x,176,x,240,'dplank');
+  g+=L(0,176,400,176,'kthick');
+  g+=C(193,170,5,'ky')+C(207,170,5,'kb');
+  g+=cam(200,200,-90,96,46)+camBody(200,200,-90)+chip(200,214,'О');
+  g+=T(186,232,'8A · камера за банками','dlp','end');
+  g+=cam(114,184,-117,62,40)+camBody(114,184,-117)+chip(126,196,'О');
+  g+=T(100,212,'3B','dlp','end');
+  g+=R(296,190,90,40,'dtable',3)+T(341,206,'стол в тени','dlp','middle')+T(341,221,'1A · 6B','dlp','middle');
+  return g;},
+idle:()=>{let g=R(0,0,400,240,'dw');
+  g+=C(200,30,13,'dsun');for(let i=0;i<8;i++){const a=i*Math.PI/4;g+=L(200+17*Math.cos(a),30+17*Math.sin(a),200+23*Math.cos(a),30+23*Math.sin(a),'k1');}
+  g+=T(230,34,'солнце за героем','dl');
+  g+=carTop(200,140,0,'y',{s:2.2});
+  const po=seatPos(200,140,0,1,2.2);
+  g+=cam(po[0],po[1],-90,74,50)+camBody(po[0],po[1],-90)+chips(200,140,0,['Г','О'],2.2);
+  g+=T(272,136,'2A · снизу вверх','dl')+T(272,152,'3A · руки и руль','dl');
+  g+=carTop(70,66,0,'b',{alt:1})+chips(70,66,0,['В',null])+T(70,98,'страховка','dl','middle');
+  g+=T(200,198,'обе машины стоят','dl','middle');
+  return g;},
+yellow:()=>{let g=R(0,0,400,240,'dw');
+  g+=P('M241,157 L241,173 L120,205 L120,125 Z','dspray')+T(152,169,'струя','dl');
+  g+=carTop(270,165,0,'y',{wake:1})+chips(270,165,0,['Г',null]);
+  g+=opCar(90,80,0,'b',26,132,30,{alt:1})+T(90,58,'4C','dl','middle');
+  g+=opCar(180,62,0,'b',22,84,40,{alt:1})+T(180,40,'4D','dl','middle');
+  g+=opCar(270,72,0,'b',90,66,44)+T(270,50,'4A · 4B','dl','middle');
+  g+=dim(336,88,336,149,'3–4 м');
+  g+=arrow(20,226,380,226,'darr')+T(376,218,'ход','dl','end');
+  return g;},
+swap:()=>{let g=R(0,0,400,240,'dw')+L(200,8,200,232,'ddiv');
+  g+=T(12,22,'5A · герой в жёлтой','dlb')+T(212,22,'5B · герой в голубой','dlb');
+  const oL=seatPos(100,80,0,1),gL=seatPos(100,172,0,0);
+  g+=carTop(100,172,0,'y')+chips(100,172,0,['Г',null]);
+  g+=carTop(100,80,0,'b');
+  g+=cam(oL[0],oL[1],168,44,40,'dcone2')+cam(oL[0],oL[1],90,64,40)+camBody(oL[0],oL[1],90);
+  g+=arcArrow(oL[0],oL[1],32,100,160);
+  g+=arrow(gL[0]+14,gL[1]-10,oL[0]+14,oL[1]+14,'am')+R(gL[0]+11,(gL[1]+oL[1])/2-6,6,12,'kb',2);
+  g+=chips(100,80,0,['В','О']);
+  const oR=seatPos(300,80,0,1);
+  g+=carTop(300,172,0,'b')+chips(300,172,0,['Г',null]);
+  g+=carTop(300,80,0,'y');
+  g+=cam(oR[0],oR[1],12,44,40,'dcone2')+cam(oR[0],oR[1],90,64,40)+camBody(oR[0],oR[1],90);
+  g+=arcArrow(oR[0],oR[1],32,20,80);
+  g+=chips(300,80,0,['В','О']);
+  g+=T(100,222,'рывок по часовой ↻','dl','middle')+T(300,222,'рывок по часовой ↻','dl','middle');
+  return g;},
+blue:()=>{let g=R(0,0,400,240,'dw');
+  g+=R(372,0,28,240,'dpier');for(let y=12;y<240;y+=14)g+=L(372,y,400,y,'dplank');
+  g+=L(372,0,372,240,'kthick');
+  g+=`<text transform="translate(390 120) rotate(-90)" class="dlp" text-anchor="middle">пирс</text>`;
+  g+=P('M221,157 L221,173 L110,205 L110,125 Z','dspray');
+  g+=carTop(250,165,0,'b',{wake:1})+chips(250,165,0,['Г',null]);
+  g+=arrow(284,160,350,144,'darr');
+  g+=opCar(150,50,0,'y',8,120,30,{alt:1})+T(150,28,'7D','dl','middle');
+  g+=opCar(150,112,0,'y',31,84,40,{alt:1})+T(114,117,'7B','dl','end');
+  g+=opCar(250,108,0,'y',90,38,60)+T(250,86,'7A · 7C','dl','middle');
+  g+=dim(314,123,314,150,'1,5–2 м');
+  g+=arrow(20,226,340,226,'darr')+T(336,218,'ход','dl','end');
+  return g;}
+};
+
+/* ---------- data ---------- */
+const SCENES=[
+ {n:1,name:'Хук',tc:'0:00–0:02',d:2,car:'y',who:'камера на пирсе',text:'Крупно: рука вскрывает жёлтую банку у самой камеры. «Пшик» в монтаже переходит в рёв мотора.'},
+ {n:2,name:'Глоток',tc:'0:02–0:04',d:2,car:'y',who:'оператор пассажиром в жёлтой',text:'Герой в жёлтой машине, двигатель на холостых. Запрокидывает голову и пьёт. Камера снизу, на фоне небо, кадр медленно наезжает.'},
+ {n:3,name:'Старт',tc:'0:04–0:05',d:1,car:'y',who:'жёлтая и край пирса',text:'Последний глоток, банку в сторону, руки на руль, и сразу газ. Резкая склейка на брызги. Это и есть «заряд».'},
+ {n:4,name:'Жёлтый заезд',tc:'0:05–0:12',d:7,car:'y',who:'оператор в голубой',text:'Оператор едет на голубой рядом или чуть позади. Борт, лицо героя, брызги, обгон. Ч/б вспышки на битах.'},
+ {n:5,name:'Смена',tc:'0:12–0:14',d:2,car:'yb',who:'оператор меняет машину',text:'Герой останавливается и бросает синюю банку в камеру. Оператор уводит камеру рывком. Рывок обратно, и мы уже в голубой машине.'},
+ {n:6,name:'Второй глоток',tc:'0:14–0:15',d:1,car:'b',who:'оператор в жёлтой',text:'Короче первого: открыл, пьёт залпом, смял банку в руке. Газ.'},
+ {n:7,name:'Голубой заезд',tc:'0:15–0:21',d:6,car:'b',who:'оператор в жёлтой',text:'Агрессивнее, чем в первый раз: камера ближе, больше брызг в объектив.'},
+ {n:8,name:'Финал',tc:'0:21–0:25',d:4,car:'n',who:'камера на пирсе',text:'Две смятые банки стоят на краю пирса, камера на уровне банок. Машина пролетает мимо, волна сбивает банки в воду. Конец.'}
+];
+const CARNAME={y:'жёлтая',b:'голубая',yb:'жёлтая → голубая',n:'обе банки'};
+const BLOCKS=[
+ {id:'A',name:'Пирс',where:'камера на пирсе',shots:['1A','6B','3B','8A'],text:'Сначала макро на столе в тени, банки из холодильника. Потом край пирса у воды: старт жёлтой и финал с волной. Звуки пшика и сминания пишутся здесь же.'},
+ {id:'B',name:'Жёлтая на холостых',where:'на воде, машины стоят',shots:['2A','3A'],text:'Оператор садится пассажиром в жёлтую. Голубая с вашим водителем рядом на страховке.'},
+ {id:'C',name:'Жёлтый заезд',where:'оператор в голубой',shots:['4A','4B','4C','4D','5A'],text:'Ваш водитель ведёт голубую, оператор пассажиром. В конце блока бросок банки и рывок, 3–4 дубля.'},
+ {id:'D',name:'Голубой заезд',where:'оператор в жёлтой',shots:['5B','6A','7A','7B','7C','7D'],text:'Пересадка: герой в голубую, водитель и оператор в жёлтую. Первым снять рывок 5B, пока свет такой же, как в 5A.'}
+];
+const SHOTS=[
+ {id:'1A',scene:1,block:'A',car:'y',dur:'≈2 с',fps:25,title:'Пшик: вскрытие жёлтой банки',plan:'Макро, банка у самого объектива',cam:'Пирс, стол в тени',move:'Статика, фокус на язычке',lens:'Макро 90–100 мм',takes:'3–5',note:'Банки из холодильника: в жару сразу запотеют, при вскрытии пойдёт дымок. Руки героя с теми же часами и браслетами, что в машине.'},
+ {id:'2A',scene:2,block:'B',car:'y',dur:'≈2 с',fps:25,title:'Глоток на фоне неба',plan:'Средний, наезд до крупного',cam:'Жёлтая, пассажирское место, снизу вверх',move:'Медленный наезд весь глоток',lens:'16–24 мм',takes:'3',note:'Двигатель на холостых, вибрация должна читаться. Снимать в 4K и выше: наезд можно добрать кропом.'},
+ {id:'3A',scene:3,block:'B',car:'y',dur:'≈0,5 с',fps:25,title:'Банку в сторону, руки на руль',plan:'Крупный: руки, руль, лицо',cam:'Жёлтая, пассажирское место',move:'С рук, на газ камеру дёргает вместе с машиной',lens:'24–35 мм',takes:'3',note:'Банку бросать в салон, не в воду. Резать на первом рывке, дальше сразу 3B.'},
+ {id:'3B',scene:3,block:'A',car:'y',dur:'≈0,5 с',fps:120,title:'Брызги на старте',plan:'Общий, вода крупно на переднем плане',cam:'Край пирса, 20–30 см над водой',move:'Статика',lens:'24 мм',takes:'3–4',note:'Жёсткая склейка из 3A. Против солнца, брызги в контровом. Если нужен удар без замедления, сделать дубль в 25 fps.'},
+ {id:'4A',scene:4,block:'C',car:'y',dur:'≈2 с',fps:120,title:'Борт на скорости',plan:'Общий, машина целиком',cam:'Голубая, борт к борту, 3–4 м',move:'Параллельное ведение',lens:'35–50 мм',takes:'2–3 прохода',note:'Одинаковая скорость: машина стоит в кадре, вода летит.'},
+ {id:'4B',scene:4,block:'C',car:'y',dur:'≈1,5 с',fps:120,title:'Лицо героя',plan:'Крупный, профиль',cam:'Голубая, борт к борту, 4–5 м',move:'Ведение',lens:'70–135 мм',takes:'2–3 прохода',note:'Теле сжимает воду за лицом. Проверить, чтобы камера не отражалась в очках.'},
+ {id:'4C',scene:4,block:'C',car:'y',dur:'≈1,5 с',fps:120,title:'Струя сзади',plan:'Общий, низко над водой',cam:'Голубая, сзади-сбоку, вне струи',move:'Ведение, камера у самого борта',lens:'24 мм',takes:'2 прохода',note:'В струю не заезжать. Воду в объектив оставляем для голубого заезда.'},
+ {id:'4D',scene:4,block:'C',car:'y',dur:'≈2 с',fps:120,title:'Обгон',plan:'Общий',cam:'Голубая держит курс, жёлтая обгоняет справа',move:'Камера смотрит вперёд, жёлтая входит в кадр',lens:'24–35 мм',takes:'2–3',note:'Край своего капота в углу кадра даёт скорость и масштаб. Ч/б вспышки по битам ставятся на монтаже.'},
+ {id:'5A',scene:5,block:'C',car:'y',dur:'≈1 с',fps:25,title:'Бросок синей банки и рывок',plan:'Средний, герой в остановившейся жёлтой',cam:'Голубая, борт к борту, 2–3 м',move:'Банка летит в объектив, резкий рывок вправо',lens:'24 мм, тот же в 5B',takes:'3–4',note:'Банка пустая, на объективе защитный фильтр. Рывок начинать до удара. 1/50: смаз гуще.'},
+ {id:'5B',scene:5,block:'D',car:'b',dur:'≈1 с',fps:25,title:'Рывок обратно: уже в голубой',plan:'Средний',cam:'Жёлтая, борт к борту, 2–3 м',move:'Рывок вправо: начать левее героя, остановиться на нём',lens:'24 мм',takes:'3–4',note:'Та же скорость рывка и та же сторона солнца, что в 5A. Дубль не останавливать: герой сразу играет 6A.'},
+ {id:'6A',scene:6,block:'D',car:'b',dur:'≈1 с',fps:25,title:'Залпом и смял',plan:'Крупный',cam:'Жёлтая, рядом, чуть снизу',move:'С рук, толчок на газ',lens:'24–35 мм',takes:'3',note:'Короче первого глотка: открыл, залпом, смял, газ. Крупные вставки берём из 6B.'},
+ {id:'6B',scene:6,block:'A',car:'b',dur:'вставки в 6A',fps:25,title:'Вскрытие и сминание синей',plan:'Макро',cam:'Пирс, стол в тени',move:'Статика',lens:'Макро 90–100 мм',takes:'3–5',note:'Снять сразу после 1A, пока стоит макро. Руки героя.'},
+ {id:'7A',scene:7,block:'D',car:'b',dur:'≈1,5 с',fps:120,title:'Борт вплотную',plan:'Средний, машина не влезает в кадр',cam:'Жёлтая, борт к борту, 1,5–2 м',move:'Ведение, лёгкий наклон горизонта',lens:'16–24 мм',takes:'2–3 прохода',note:'Ближе и шире, чем 4A. Отсюда и агрессия.'},
+ {id:'7B',scene:7,block:'D',car:'b',dur:'≈1,5 с',fps:120,title:'Вода в объектив',plan:'Общий сквозь брызги',cam:'Жёлтая, на краю струи',move:'Ведение',lens:'16–24 мм',takes:'2–3 прохода',note:'Капли на линзе оставить. Чехол обязателен, протирать между дублями.'},
+ {id:'7C',scene:7,block:'D',car:'b',dur:'≈1,5 с',fps:120,title:'Лицо вплотную',plan:'Крупный, анфас или 3/4',cam:'Жёлтая, чуть впереди, 1,5 м',move:'Ведение, наклон горизонта',lens:'24–35 мм',takes:'2–3 прохода',note:'В 4B лицо снято теле издалека, здесь широкий угол вблизи. На этом контрасте второй заезд читается злее.'},
+ {id:'7D',scene:7,block:'D',car:'b',dur:'≈1,5 с',fps:120,title:'Уход к пирсу',plan:'Общий',cam:'Жёлтая, сзади-сбоку',move:'Ведение, потом камера отпускает машину',lens:'35–50 мм',takes:'2',note:'Пирс в кадре связывает заезд с финалом.'},
+ {id:'8A',scene:8,block:'A',car:'n',dur:'≈4 с',fps:120,title:'Волна сбивает банки',plan:'Общий, камера на уровне банок',cam:'Пирс, низко, за банками',move:'Статика',lens:'24–35 мм',takes:'3–5',note:'Голубая проходит в 3–5 м от пирса. Банки на леске: достать из воды и сдёрнуть, если волна слабая. Держать кадр до конца.'}
+];
+const BY={};SHOTS.forEach(s=>BY[s.id]=s);
+const SVG={};SHOTS.forEach(s=>{SVG[s.id]=`<svg viewBox="0 0 320 180" class="sk" role="img" aria-label="Кадр ${s.id}: ${s.title}">${FR[s.id]()}${CROP}</svg>`;});
+
+const DIAGRAMS=[
+ {key:'pier',blk:'A',title:'Пирс',ids:'1A 6B 3B 8A',items:['Макро 1A и 6B на столе в тени, банки холодные.','3B: камера на краю пирса в 20–30 см над водой, жёлтая стартует от пирса.','8A: камера за банками на их уровне. Голубая проходит в 3–5 м, волна идёт в пирс.']},
+ {key:'idle',blk:'B',title:'Жёлтая на холостых',ids:'2A 3A',items:['Оператор на пассажирском месте, камера низко, снизу вверх.','Солнце за героем: небо в кадре и контровой на банке.','Голубая рядом на страховке.']},
+ {key:'yellow',blk:'C',title:'Жёлтый заезд',ids:'4A–4D',items:['4A, 4B: борт к борту, 3–4 м. Для теле 4B можно отойти до 4–5 м.','4C: сзади-сбоку, вне струи.','4D: голубая держит курс, жёлтая обгоняет справа и уходит вперёд.']},
+ {key:'swap',blk:'C→D',title:'Смена: бросок и рывок',ids:'5A → 5B',items:['5A: герой бросает пустую синюю банку, оператор уводит камеру рывком вправо.','5B: машины поменялись. Рывок тоже вправо: начать левее героя и остановиться на нём.','Одна скорость рывка, один объектив, 25 fps и 1/50. Склейка в середине смаза.']},
+ {key:'blue',blk:'D',title:'Голубой заезд',ids:'7A–7D',items:['7A, 7C: вплотную, 1,5–2 м, широкий угол.','7B: на краю струи, вода летит в объектив.','7D: камера отпускает голубую к пирсу.']}
+];
+
+/* ---------- state ---------- */
+const KEY='zaryad-board-v1';
+let state={view:'edit',crop:false,done:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&typeof s==='object')state=Object.assign(state,s);}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+const $=id=>document.getElementById(id);
+const board=$('board');
+
+function card(s,mode){
+  const sc=SCENES[s.scene-1];
+  const tag=mode==='edit'?`Блок ${s.block}`:`Сцена ${s.scene} · ${sc.tc}`;
+  const done=!!state.done[s.id];
+  return `<article class="shot${done?' is-done':''}" data-car="${s.car}" data-id="${s.id}">
+  <div class="shot-h"><span class="sid">${s.id}</span><span class="dur">${s.dur}</span><span class="fps${s.fps===120?' hi':''}">${s.fps} fps</span></div>
+  <figure class="frame">${SVG[s.id]}</figure>
+  <div class="shot-b"><h4>${s.title}</h4>
+  <dl class="spec"><dt>План</dt><dd>${s.plan}</dd><dt>Камера</dt><dd>${s.cam}</dd><dt>Движение</dt><dd>${s.move}</dd><dt>Объектив</dt><dd>${s.lens}</dd><dt>Дубли</dt><dd>${s.takes}</dd></dl>
+  <p class="note">${s.note}</p></div>
+  <div class="shot-f"><span class="tag">${tag}</span><label class="check done" for="done-${s.id}"><input type="checkbox" id="done-${s.id}" data-id="${s.id}"${done?' checked':''}> снято</label></div>
+  </article>`;
+}
+function render(){
+  let html='';
+  if(state.view==='edit'){
+    SCENES.forEach(sc=>{
+      const list=SHOTS.filter(s=>s.scene===sc.n);
+      html+=`<section class="group" id="s${sc.n}"><header class="ghead"><span class="gnum">${sc.n}</span><div class="gtxt"><h3>${sc.name}</h3><p class="gmeta"><span>${sc.tc}</span><span class="pill c-${sc.car}">${CARNAME[sc.car]}</span><span>${sc.who}</span></p><p class="gdesc">${sc.text}</p></div></header><div class="grid">${list.map(s=>card(s,'edit')).join('')}</div></section>`;
+    });
+  }else{
+    BLOCKS.forEach(b=>{
+      html+=`<section class="group" id="b${b.id}"><header class="ghead"><span class="gnum">${b.id}</span><div class="gtxt"><h3>${b.name}</h3><p class="gmeta"><span>${b.where}</span><span>${b.shots.join(' · ')}</span></p><p class="gdesc">${b.text}</p></div></header><div class="grid">${b.shots.map(id=>card(BY[id],'shoot')).join('')}</div></section>`;
+    });
+  }
+  board.innerHTML=html;
+  board.classList.toggle('show-crop',!!state.crop);
+  $('v-edit').setAttribute('aria-pressed',state.view==='edit');
+  $('v-shoot').setAttribute('aria-pressed',state.view==='shoot');
+  $('crop').checked=!!state.crop;
+  count();
+}
+function count(){$('doneN').textContent=SHOTS.filter(s=>state.done[s.id]).length;}
+
+board.addEventListener('change',e=>{
+  const t=e.target;if(!t.matches('input[type=checkbox][data-id]'))return;
+  const id=t.dataset.id;if(t.checked)state.done[id]=true;else delete state.done[id];
+  const art=t.closest('.shot');if(art)art.classList.toggle('is-done',t.checked);
+  count();save();
+});
+$('v-edit').addEventListener('click',()=>{state.view='edit';save();render();});
+$('v-shoot').addEventListener('click',()=>{state.view='shoot';save();render();});
+$('crop').addEventListener('change',e=>{state.crop=e.target.checked;board.classList.toggle('show-crop',state.crop);save();});
+let armT=null;const rb=$('reset');
+rb.addEventListener('click',()=>{
+  if(rb.classList.contains('armed')){clearTimeout(armT);rb.classList.remove('armed');rb.textContent='Сбросить отметки';state.done={};save();render();return;}
+  rb.classList.add('armed');rb.textContent='Точно сбросить?';
+  armT=setTimeout(()=>{rb.classList.remove('armed');rb.textContent='Сбросить отметки';},3000);
+});
+
+/* timeline + scene index */
+const smooth=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function goScene(n){if(state.view!=='edit'){state.view='edit';save();render();}const el=$('s'+n);if(el)el.scrollIntoView({behavior:smooth?'smooth':'auto',block:'start'});}
+$('tl').innerHTML=SCENES.map(sc=>`<button type="button" class="c-${sc.car}" style="--d:${sc.d}" data-n="${sc.n}" title="${sc.n}. ${sc.name} · ${sc.tc}" aria-label="Сцена ${sc.n}: ${sc.name}, ${sc.tc}">${sc.n}</button>`).join('');
+$('sceneList').innerHTML=SCENES.map(sc=>`<li><button type="button" data-n="${sc.n}"><span class="sn">${sc.n}</span><span class="snm">${sc.name}</span><span class="stc">${sc.tc}</span></button></li>`).join('');
+[$('tl'),$('sceneList')].forEach(el=>el.addEventListener('click',e=>{const b=e.target.closest('button[data-n]');if(b)goScene(+b.dataset.n);}));
+
+/* diagrams */
+$('diagrams').innerHTML=DIAGRAMS.map(d=>`<article class="dcard"><div class="dcard-h"><span class="blk"${d.blk.length>1?' style="width:auto;padding:0 6px"':''}>${d.blk}</span><h3>${d.title}</h3><span class="ids">${d.ids}</span></div><figure class="frame"><svg viewBox="0 0 400 240" class="sk dg" role="img" aria-label="Схема сверху: ${d.title}">${DG[d.key]()}</svg></figure><ul>${d.items.map(i=>`<li>${i}</li>`).join('')}</ul></article>`).join('');
+
+/* legend */
+const lg=(w,h,inner)=>`<svg class="sk dg" style="width:${w}px;height:${h}px" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${inner}</svg>`;
+$('legend').innerHTML=[
+  `<span>${lg(18,18,chip(9,9,'Г'))}герой</span>`,
+  `<span>${lg(18,18,chip(9,9,'В'))}ваш водитель</span>`,
+  `<span>${lg(18,18,chip(9,9,'О'))}оператор</span>`,
+  `<span>${lg(34,22,cam(3,11,0,30,40)+camBody(3,11,0))}камера и что в кадре</span>`,
+  `<span>${lg(34,22,cam(3,11,0,30,40,'dcone2'))}положение камеры до или после рывка</span>`,
+  `<span>${lg(40,22,R(4,3,32,16,'ky alt',6))}запасная позиция</span>`,
+  `<span>${lg(40,22,P('M4,9 L4,13 L36,20 L36,2 Z','dspray'))}струя за машиной</span>`
+].join('');
+
+render();
+})();
+</script>

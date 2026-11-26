@@ -1,0 +1,546 @@
+<title>Один день на фабрике</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Oswald:wght@500;600;700&display=swap">
+<style>
+/* Layout: on-set board. Hero with a 55-second strip coloured by each scene's material, then one section per scene: top-down lighting plan beside its shot cards, then shared rules for light, sound and shooting order. */
+:root{
+  --bg:#ECEDEC; --surface:#F8F8F7; --ink:#16181A; --muted:#5A6065; --line:#CED2D3;
+  --steel:#AEB7BD; --leather:#8B5A3C; --gold:#C9962B; --sky:#DCE8EE; --mark:#C93C28; --light:#F2BE50;
+  --paper:#FFFFFF; --wall:#DEE1E2; --floor:#CBD0D2; --dark:#454C52; --hull:#F3F4F4; --body:#34414B; --sketch:#1B1E21; --dust:#F5D27E;
+  --font-display:"Oswald","Arial Narrow",Impact,sans-serif;
+  --font-body:"Golos Text","Segoe UI",Roboto,system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101213; --surface:#181B1D; --ink:#E7E9EA; --muted:#9AA1A6; --line:#2C3134;
+    --steel:#6F7B83; --leather:#B07A55; --gold:#E0AE45; --sky:#1A262C; --mark:#FF6A4D; --light:#F2C04F;
+    --paper:#2A2F33; --wall:#1F2427; --floor:#262B2E; --dark:#0C0E0F; --hull:#3A4146; --body:#45555F; --sketch:#DDE2E5; --dust:#F2C04F;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101213; --surface:#181B1D; --ink:#E7E9EA; --muted:#9AA1A6; --line:#2C3134;
+  --steel:#6F7B83; --leather:#B07A55; --gold:#E0AE45; --sky:#1A262C; --mark:#FF6A4D; --light:#F2C04F;
+  --paper:#2A2F33; --wall:#1F2427; --floor:#262B2E; --dark:#0C0E0F; --hull:#3A4146; --body:#45555F; --sketch:#DDE2E5; --dust:#F2C04F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{text-wrap:balance}
+a{color:inherit;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+
+.hero{padding-block:40px 8px}
+.eyebrow{margin:0;font:600 12px/1.4 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(46px,9vw,112px)/.95 var(--font-display);text-transform:uppercase;letter-spacing:.005em;margin:10px 0 18px}
+.lede{max-width:62ch;font-size:17px;margin:0 0 18px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;padding:0;margin:0;font-size:13px;color:var(--muted)}
+.facts b{font:600 16px var(--font-mono);color:var(--ink);margin-right:4px}
+.tl{display:flex;height:46px;margin-top:30px;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}
+.tl a{flex:var(--d) 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:8px;border-right:1.5px solid var(--ink);text-decoration:none;font:600 12px var(--font-mono);overflow:hidden;white-space:nowrap}
+.tl a:last-child{border-right:0}
+.tl a span{overflow:hidden;text-overflow:ellipsis}
+.m1{background:var(--sky);color:var(--ink)} .m2{background:var(--steel);color:var(--ink)} .m3{background:var(--leather);color:#fff}
+.m4{background:var(--gold);color:#16181A} .m5{background:var(--ink);color:var(--bg)}
+.ticks{position:relative;height:20px;margin-top:4px;font:500 11px var(--font-mono);color:var(--muted)}
+.ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.ticks span:first-child{transform:none}
+.ticks span:last-child{transform:translateX(-100%)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 20px;margin:22px 0 0;padding:0;list-style:none;font-size:14px}
+.key{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin:22px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:13px}
+.key span{display:inline-flex;align-items:center;gap:7px}
+.key svg{flex:none;display:inline-block}
+
+.scene{margin-top:44px;scroll-margin-top:16px}
+.shead{display:flex;gap:18px;align-items:flex-start;padding-bottom:14px;margin-bottom:16px;border-bottom:1.5px solid var(--ink)}
+.snum{font:700 54px/0.9 var(--font-display);min-width:.8em}
+.stxt{min-width:0;flex:1}
+.shead h2{font:600 26px/1.15 var(--font-display);text-transform:uppercase;letter-spacing:.01em;margin:0 0 6px}
+.smeta{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0;font:500 12px var(--font-mono);color:var(--muted)}
+.chipm{display:inline-block;width:12px;height:12px;border-radius:2px;border:1px solid var(--ink);vertical-align:-1px;margin-right:6px}
+.quote{margin:10px 0 0;max-width:70ch;font-size:16px;font-weight:500}
+.quote::before{content:"Реплика: ";font:600 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.focus{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,272px),1fr));gap:18px}
+@media (min-width:640px){.lplan{grid-column:span 2}}
+.card{display:flex;flex-direction:column;gap:10px;min-width:0;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.lplan{border-color:var(--ink)}
+.lplan h3{margin:0;font:600 15px var(--font-display);text-transform:uppercase;letter-spacing:.04em;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.lplan h3 small{font:500 11.5px var(--font-mono);text-transform:none;letter-spacing:0;color:var(--muted)}
+.lplan ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.45;display:flex;flex-direction:column;gap:4px}
+.lplan ul b{font-weight:600}
+.ch{display:flex;align-items:center;gap:10px;font:600 12px var(--font-mono)}
+.sid{display:inline-grid;place-items:center;min-width:36px;height:24px;padding:0 6px;border-radius:4px;border:1px solid var(--ink)}
+.dur{color:var(--muted);font-weight:500}
+.fps{margin-left:auto;padding:2px 7px;border:1px solid var(--ink);border-radius:3px;font-size:11px}
+.fps.hi{background:var(--ink);color:var(--bg)}
+.frame{margin:0;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--wall)}
+.card h4{margin:0;font:600 15.5px/1.3 var(--font-body)}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:13px;line-height:1.4}
+.spec dt{font:500 10.5px/1.75 var(--font-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.spec dd{margin:0;min-width:0}
+.spec dd.lt{border-left:3px solid var(--light);padding-left:7px}
+.note{margin:0;font-size:13px;line-height:1.45;color:var(--muted)}
+
+.sk{display:block;width:100%;height:auto;max-width:100%}
+.sk *{vector-effect:non-scaling-stroke}
+.sk .k{fill:none;stroke:var(--sketch);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sk .k1{fill:none;stroke:var(--sketch);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.sk .kthick{fill:none;stroke:var(--sketch);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.sk .kp{fill:var(--paper);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .kink{fill:var(--sketch);stroke:var(--sketch);stroke-width:1;stroke-linejoin:round}
+.sk .kwall{fill:var(--wall)} .sk .kfloor{fill:var(--floor)} .sk .ksky{fill:var(--sky)}
+.sk .kdark{fill:var(--dark)}
+.sk .klamp{fill:var(--light);stroke:var(--sketch);stroke-width:1}
+.sk .kcol{fill:var(--floor);stroke:var(--sketch);stroke-width:1;stroke-opacity:.4}
+.sk .khull{fill:var(--hull);stroke:var(--sketch);stroke-width:2}
+.sk .kbody{fill:var(--body);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .krefl{fill:#fff;opacity:.28}
+.sk .kgold{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round}
+.sk .kleather{fill:var(--leather);stroke:var(--sketch);stroke-width:2}
+.sk .kgrain{fill:var(--sketch);opacity:.25}
+.sk .kstitch{fill:none;stroke:var(--paper);stroke-width:3;stroke-dasharray:7 5;stroke-linecap:round}
+.sk .kmetal{fill:var(--steel);stroke:var(--sketch);stroke-width:2;stroke-linejoin:round}
+.sk .kgog{fill:var(--sky);stroke:var(--sketch);stroke-width:2}
+.sk .kapron{fill:var(--leather);stroke:var(--sketch);stroke-width:1.5}
+.sk .kdust{fill:var(--dust);stroke:none;opacity:.95}
+.sk .kbeam{fill:var(--light);opacity:.22}
+.sk .kblot{fill:var(--sketch);opacity:.13}
+.sk .kwheel{fill:none;stroke:var(--sketch);stroke-width:5}
+.sk .kglint{fill:var(--light);stroke:var(--sketch);stroke-width:1}
+.sk .lo{fill:none;stroke:var(--sketch);stroke-linecap:round;vector-effect:none}
+.sk .li{fill:none;stroke:var(--paper);stroke-linecap:round;vector-effect:none}
+.sk .am{fill:none;stroke:var(--mark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sk .amd{fill:none;stroke:var(--mark);stroke-width:1.8;stroke-dasharray:6 5;stroke-linecap:round}
+.sk .at{fill:var(--mark);font:600 10.5px var(--font-mono);letter-spacing:.05em;paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+.sk .lm{fill:var(--light);stroke:var(--sketch);stroke-width:1.3}
+.sk .lma{fill:none;stroke:var(--light);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.sk .lmo{fill:none;stroke:var(--sketch);stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+.sk .lt{fill:var(--ink);font:600 9.5px var(--font-mono);paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+
+.dg .dfloor{fill:var(--floor)}
+.dg .dinside{fill:var(--dark);opacity:.35}
+.dg .dwallt{fill:var(--sketch)}
+.dg .dobj{fill:var(--paper);stroke:var(--sketch);stroke-width:1.4}
+.dg .dhull{fill:var(--hull);stroke:var(--sketch);stroke-width:1.6}
+.dg .dbody{fill:var(--body);stroke:var(--sketch);stroke-width:1.6}
+.dg .dmach{fill:var(--steel);stroke:var(--sketch);stroke-width:1.4}
+.dg .dgold{stroke:var(--gold);stroke-width:3;stroke-linecap:round}
+.dg .dbeam{fill:var(--light);fill-opacity:.32;stroke:var(--light);stroke-width:1}
+.dg .dlamp{fill:var(--light);stroke:var(--sketch);stroke-width:1.4}
+.dg .dtube{stroke:var(--light);stroke-width:5;stroke-linecap:round}
+.dg .dtubeo{stroke:var(--sketch);stroke-width:7.4;stroke-linecap:round}
+.dg .dflag{stroke:var(--sketch);stroke-width:5;stroke-linecap:butt}
+.dg .drefl{stroke:var(--paper);stroke-width:5;stroke-linecap:round}
+.dg .dreflo{stroke:var(--sketch);stroke-width:7;stroke-linecap:round}
+.dg .ddiff{fill:var(--paper);fill-opacity:.35;stroke:var(--sketch);stroke-width:1.2;stroke-dasharray:4 3}
+.dg .dprac{fill:var(--light);stroke:var(--sketch);stroke-width:1}
+.dg .dchip{fill:var(--paper);stroke:var(--sketch);stroke-width:1.2}
+.dg .dchipt{font:700 8.5px var(--font-body);fill:var(--ink)}
+.dg .dcone{fill:var(--mark);fill-opacity:.14;stroke:var(--mark);stroke-width:1.2}
+.dg .dcam{fill:var(--sketch)}
+.dg .darr{fill:none;stroke:var(--sketch);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 4}
+.dg .darrh{fill:none;stroke:var(--sketch);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.dg .dslider{stroke:var(--sketch);stroke-width:3;stroke-linecap:round}
+.dg .dl,.dg .dlt{font:500 9.5px var(--font-mono);fill:var(--ink);paint-order:stroke;stroke:var(--floor);stroke-width:3px;stroke-linejoin:round}
+.dg .dlt{font-weight:600;fill:var(--ink)}
+
+.sec h2{font:600 clamp(24px,3.2vw,32px)/1.15 var(--font-display);text-transform:uppercase;margin:52px 0 14px}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px}
+.ref{padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:6px;min-width:0}
+.ref h3{margin:0 0 12px;font:600 17px var(--font-display);text-transform:uppercase;letter-spacing:.03em}
+.rows{margin:0;display:grid;grid-template-columns:auto 1fr;gap:9px 14px;font-size:14px;line-height:1.4}
+.rows dt{font:600 11px/1.7 var(--font-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.rows dd{margin:0;min-width:0}
+.order{margin:0;padding:0;list-style:none;display:grid;gap:0;counter-reset:o}
+.order li{display:grid;grid-template-columns:34px 1fr;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line);counter-increment:o}
+.order li:last-child{border-bottom:0}
+.order li::before{content:counter(o);font:700 22px/1 var(--font-display);grid-row:span 2}
+.order b{font-weight:600}
+.order span{font-size:13.5px;color:var(--muted)}
+.foot{padding-block:36px 48px;font-size:12.5px;color:var(--muted)}
+@media (max-width:560px){.snum{font-size:40px}.shead{gap:12px}}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Раскадровка, свет и схемы · 45–60 сек</p>
+    <h1>Один день на фабрике</h1>
+    <p class="lede">Ведущий пробует работу мастеров, у него не получается, и зритель видит, насколько это сложное ремесло. Руки мастеров крупно, лицо ведущего в моменты провала, финал широким кадром.</p>
+    <ul class="facts"><li><b>≈55</b>сек</li><li><b>5</b>сцен</li><li><b>16</b>кадров</li><li><b>5</b>схем света</li><li><b>1</b>камера</li></ul>
+    <nav class="tl" id="tl" aria-label="Хронометраж по сценам"></nav>
+    <div class="ticks" aria-hidden="true"><span style="left:0">0 с</span><span style="left:18.18%">10</span><span style="left:36.36%">20</span><span style="left:54.54%">30</span><span style="left:72.72%">40</span><span style="left:90.9%">50</span><span style="left:100%">55 с</span></div>
+    <ul class="toc"><li><a href="#s1">Сцены и свет</a></li><li><a href="#rules">Общие правила света</a></li><li><a href="#order">Порядок съёмки</a></li><li><a href="#sound">Звук и безопасность</a></li></ul>
+    <div class="key" id="key"></div>
+  </header>
+</div>
+
+<div class="wrap" id="board"></div>
+
+<section class="wrap sec" id="rules">
+  <h2>Общие правила света</h2>
+  <div class="refgrid">
+    <div class="ref"><h3>Цех и свои приборы</h3>
+      <dl class="rows">
+        <dt>Баланс</dt><dd>Лампы цеха часто дают зелень. В каждой зоне баланс белого вручную по серой карте, свои приборы подстроить под цех, а не наоборот.</dd>
+        <dt>Мерцание</dt><dd>Сеть 50 Гц. При 25 fps выдержка 1/50, при 50 fps 1/100. Выше 50 fps лампы цеха мерцают: замедление снимать только под своим светом.</dd>
+        <dt>Фон</dt><dd>Свет цеха не выключать: это глубина и фактура. Лица и руки берём своим светом на ступень ярче фона.</dd>
+        <dt>Пыль</dt><dd>В зоне шлифовки объективы не менять, на объективе защитный фильтр. Пыль в контровом свете работает на кадр.</dd>
+      </dl>
+    </div>
+    <div class="ref"><h3>Минимальный комплект</h3>
+      <dl class="rows">
+        <dt>Ключ</dt><dd>COB 200–300 Вт с софтбоксом или фонарём</dd>
+        <dt>Контр</dt><dd>Второй COB, можно без диффузии</dd>
+        <dt>Трубки</dt><dd>2–4 LED-трубки: скользящий свет и полосы в глянце</dd>
+        <dt>Панель</dt><dd>Небольшая LED-панель на аккумуляторе с сотами</dd>
+        <dt>Модиф.</dt><dd>Рама диффузии 1,2×1,2 м, отражатель, 2 чёрных флага, чёрная ткань 2×3 м, серая карта</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="wrap sec" id="order">
+  <h2>Порядок съёмки</h2>
+  <div class="refgrid">
+    <div class="ref">
+      <ol class="order">
+        <li><b>Ворота: 1A, 1B</b><span>Время по солнцу: когда фасад в тени. Проход в цех сразу за репликой.</span></li>
+        <li><b>Шлифовка: 2A → 2D мастера → 2B → 2C → 2D ведущего</b><span>Сначала руки мастера, пока поверхность ровная. Ведущему дать обрезок или брак, не клиентский корпус.</span></li>
+        <li><b>Кожа: 3A → 3B → 3C → 3D</b><span>Ведущий шьёт на обрезке, мастерский шов снять рядом для сравнения.</span></li>
+        <li><b>Золото: 4A → 4C → 4B</b><span>Свет под отражения ставится дольше всего, закладывать время.</span></li>
+        <li><b>Финал: 5A, 5B → 5D → 5C</b><span>Команду собрать к широкому кадру и сразу снять перебивки, пока все на месте.</span></li>
+      </ol>
+    </div>
+    <div class="ref"><h3>Оператору</h3>
+      <dl class="rows">
+        <dt>Руки</dt><dd>Макро 90–100 мм, 50 fps и 1/100. На таймлайне 25p даёт мягкое замедление 2×.</dd>
+        <dt>Провалы</dt><dd>2C, 3D, 4B: держать крупный план 2 секунды после реплики. Пауза нужна монтажу.</dd>
+        <dt>Финал</dt><dd>5D на 16–24 мм с гимбала или тележки, отъезд от ведущего до всего цеха.</dd>
+        <dt>Высота</dt><dd>Мастера снимать на уровне рук, ведущего на уровне глаз. Так видно, кто здесь главный.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="wrap sec" id="sound">
+  <h2>Звук и безопасность</h2>
+  <div class="refgrid">
+    <div class="ref"><h3>Звук</h3>
+      <dl class="rows">
+        <dt>Ведущий</dt><dd>Петличка. На время реплик просить выключить соседние станки.</dd>
+        <dt>Станки</dt><dd>Шлифмашинку, швейную машинку и шорох кисти записать отдельно, крупно: это ритм монтажа.</dd>
+        <dt>Тишина</dt><dd>30 секунд фона цеха в каждой зоне.</dd>
+      </dl>
+    </div>
+    <div class="ref"><h3>Безопасность</h3>
+      <dl class="rows">
+        <dt>Шлифовка</dt><dd>Ведущему очки и перчатки. В кадре это ещё и смешно.</dd>
+        <dt>Приборы</dt><dd>Стойки с мешками, кабели под коврики. Не ставить свет в проходах погрузчиков.</dd>
+        <dt>Дым</dt><dd>Дым-машина в финале только с разрешения фабрики: могут сработать датчики.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<div class="wrap foot">Схемы вида сверху, не в масштабе. Фактические цифры в реплике финала взяты из сценария, перед съёмкой сверить с фабрикой.</div>
+
+<script>
+(function(){
+"use strict";
+const f=n=>Math.round(n*10)/10;
+const P=(d,c)=>`<path d="${d}" class="${c}"/>`;
+const C=(x,y,r,c)=>`<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" class="${c}"/>`;
+const E=(x,y,rx,ry,c,rot)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" class="${c}"${rot?` transform="rotate(${rot} ${x} ${y})"`:''}/>`;
+const R=(x,y,w,h,c,rx,extra)=>`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}"${rx?` rx="${rx}"`:''} class="${c}"${extra?' '+extra:''}/>`;
+const L=(x1,y1,x2,y2,c)=>`<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="${c}"/>`;
+const T=(x,y,s,c,a)=>`<text x="${f(x)}" y="${f(y)}" class="${c}"${a?` text-anchor="${a}"`:''}>${s}</text>`;
+function rng(seed){let s=(seed*2654435761)>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};}
+function head(x,y,a,c,h){h=h||7;const p1=[x-h*Math.cos(a-0.45),y-h*Math.sin(a-0.45)],p2=[x-h*Math.cos(a+0.45),y-h*Math.sin(a+0.45)];return `<path d="M${f(p1[0])},${f(p1[1])} L${f(x)},${f(y)} L${f(p2[0])},${f(p2[1])}" class="${c}"/>`;}
+function arrow(x1,y1,x2,y2,c,hc){c=c||'am';return L(x1,y1,x2,y2,c)+head(x2,y2,Math.atan2(y2-y1,x2-x1),hc||(c==='amd'?'am':c));}
+function carrow(x1,y1,cx,cy,x2,y2,c,hc){c=c||'am';return `<path d="M${x1},${y1} Q${cx},${cy} ${x2},${y2}" class="${c}"/>`+head(x2,y2,Math.atan2(y2-cy,x2-cx),hc||(c==='amd'?'am':c));}
+function limb(d,w){return `<path d="${d}" class="lo" style="stroke-width:${w+4}px"/><path d="${d}" class="li" style="stroke-width:${w}px"/>`;}
+function dots(seed,n,x0,y0,x1,y1,r0,r1,c){const r=rng(seed);let g='';for(let i=0;i<n;i++)g+=C(x0+r()*(x1-x0),y0+r()*(y1-y0),r0+r()*(r1-r0),c);return g;}
+
+/* light mark in frame: lamp at frame edge, arrow into frame */
+function lm(x,y,ang,label,anchor){const a=ang*Math.PI/180,x2=x+26*Math.cos(a),y2=y+26*Math.sin(a);
+  let g=L(x,y,x2,y2,'lmo')+L(x,y,x2,y2,'lma')+head(x2,y2,a,'lmo',8)+head(x2,y2,a,'lma',8)+C(x,y,6,'lm');
+  if(label){const lx=anchor==='end'?x-10:x+10;g+=T(lx,y+(y<90?16:-10),label,'lt',anchor||'start');}
+  return g;}
+
+/* people */
+function person(x,y,s,o){o=o||{};let g='';
+  g+=P('M-42,90 L-40,30 Q-38,8 0,4 Q38,8 40,30 L42,90 Z','kp');
+  if(o.apron)g+=P('M-22,20 L22,20 L26,90 L-26,90 Z','kapron');
+  g+=R(-8,-6,16,12,'kp');
+  g+=C(0,-22,20,'kp');
+  if(o.cap)g+=P('M-20,-26 Q-19,-46 0,-46 Q19,-46 20,-26 Z','kink')+L(-22,-26,28,-27,'kthick');
+  if(o.goggles)g+=R(-16,-29,32,10,'kgog',4)+L(-20,-24,-16,-24,'k')+L(16,-24,20,-24,'k');
+  else g+=C(-7,-24,1.8,'kink')+C(7,-24,1.8,'kink');
+  if(o.brows==='up')g+=P('M-12,-34 Q-7,-38 -3,-34 M3,-34 Q7,-38 12,-34','k1');
+  if(o.brows==='worry')g+=P('M-12,-31 L-3,-35 M3,-35 L12,-31','k1');
+  const m=o.mouth||'flat';
+  if(m==='smile')g+=P('M-7,-12 Q0,-6 7,-12','k');
+  else if(m==='wave')g+=P('M-8,-10 q4,-3 8,0 t8,0','k');
+  else if(m==='o')g+=E(0,-10,3.5,4.5,'kink');
+  else g+=L(-6,-10,6,-10,'k');
+  if(o.sweat)g+=P('M22,-34 q4,6 0,9 q-4,-3 0,-9 Z','kgog');
+  return `<g transform="translate(${x} ${y}) scale(${s})">${g}</g>`;}
+function personBack(x,y,s,dark){const c=dark?'kink':'kp';return `<g transform="translate(${x} ${y}) scale(${s})">${P('M-42,90 L-40,30 Q-38,8 0,4 Q38,8 40,30 L42,90 Z',c)+R(-8,-6,16,12,c)+C(0,-22,20,c)}</g>`;}
+function mitt(x,y,w,h,rot){return `<g transform="rotate(${rot||0} ${x} ${y})">${R(x-w/2,y-h/2,w,h,'kp',Math.min(w,h)/2)}</g>`;}
+function interior(seed){let g=R(0,0,320,180,'kwall')+R(0,124,320,56,'kfloor')+L(0,124,320,124,'k1');
+  [22,104,186,268].forEach(x=>g+=R(x,6,40,5,'klamp',2));
+  g+=R(46,14,10,110,'kcol')+R(264,14,10,110,'kcol');
+  return g;}
+function carBody(x,y,s,dir){dir=dir||1;const g=P('M-64,-2 L-66,-17 Q-63,-23 -50,-24 L-30,-25 Q-18,-38 2,-38 Q16,-37 26,-26 L50,-23 Q64,-20 66,-10 L65,-2 Z','kbody')+P('M-24,-26 Q-14,-35 0,-35 Q12,-34 20,-26 Z','kgog')+L(-58,-13,58,-13,'kgold')+P('M-52,-2 A12,12 0 0 1 -28,-2 M30,-2 A12,12 0 0 1 54,-2','k1');return `<g transform="translate(${x} ${y}) scale(${dir*s} ${s})">${g}</g>`;}
+function sander(x,y,s){return `<g transform="translate(${x} ${y}) scale(${s})">${E(0,0,28,8,'kmetal')+R(-13,-34,26,30,'kink',6)+R(10,-30,34,11,'kp',5)}</g>`;}
+const FR={
+'1A':()=>{let g=R(0,0,320,180,'ksky')+R(0,36,320,110,'kwall')+L(0,36,320,36,'k1');
+  g+=R(70,56,180,124,'kdark');[96,160,224].forEach(x=>g+=R(x-12,64,24,4,'klamp',2));
+  g+=R(0,146,320,34,'kfloor');
+  g+=person(160,98,1.05,{mouth:'smile'});
+  g+=lm(16,96,0,'ключ · отражатель')+lm(300,52,140,'контр · цех','end');
+  g+=T(12,22,'В КАМЕРУ','at');return g;},
+'1B':()=>{let g=interior(2)+R(0,0,320,180,'kwall');
+  g+=R(40,22,240,158,'kfloor')+R(40,22,240,82,'kwall')+L(40,104,280,104,'k1');
+  [[40,180],[100,180],[160,180],[220,180],[280,180]].forEach(([bx])=>g+=L(160+(bx-160)*0.3,104,bx,180,'k1'));
+  [70,124,196,250].forEach(x=>g+=R(x-14,28,28,4,'klamp',2));
+  g+=carBody(84,100,0.42,1)+carBody(240,100,0.42,-1);
+  g+=R(0,0,40,180,'kwall')+R(280,0,40,180,'kwall')+R(0,0,320,22,'kwall')+L(40,22,40,180,'kthick')+L(280,22,280,180,'kthick')+L(40,22,280,22,'kthick');
+  g+=personBack(160,124,0.75,false);
+  g+=carrow(196,150,206,120,184,98,'am');
+  g+=T(12,40,'ЗА ВЕДУЩИМ В ЦЕХ','at');return g;},
+'2A':()=>{let g=R(0,0,320,180,'kdark');
+  g+=P('M-10,30 L150,110 L210,110 L330,20 L330,0 L-10,0 Z','kbeam');
+  g+=P('M0,104 Q160,86 320,104 L320,180 L0,180 Z','khull');
+  g+=L(0,150,320,140,'k1');
+  g+=sander(168,108,2);
+  g+=mitt(206,52,40,22,-8)+mitt(120,62,34,22,20);
+  g+=dots(14,34,90,40,260,104,1,2.6,'kdust')+dots(15,14,40,70,300,100,0.8,1.6,'kdust');
+  g+=lm(300,16,150,'контр','end')+lm(14,128,-4,'скользящий');
+  g+=T(12,22,'ПЫЛЬ В КОНТРОВОМ','at');return g;},
+'2B':()=>{let g=interior(3);
+  g+=person(104,92,0.82,{cap:1,apron:1,mouth:'flat'});
+  g+=person(222,96,0.82,{goggles:1,mouth:'smile'});
+  g+=P('M0,140 Q160,126 320,140 L320,180 L0,180 Z','khull');
+  g+=limb('M128,128 Q140,140 146,146',11)+sander(150,152,0.85);
+  g+=lm(14,70,14,'ключ · софт')+lm(304,24,150,'контр','end');
+  g+=T(12,22,'МАСТЕР ПОКАЗЫВАЕТ','at');return g;},
+'2C':()=>{let g=interior(4)+R(0,0,320,180,'kdark');
+  g+=person(160,116,1.95,{goggles:1,mouth:'wave',sweat:1});
+  g+=lm(14,70,10,'ключ')+lm(304,24,150,'контр','end');
+  g+=T(12,22,'«СЛОЖНЕЕ, ЧЕМ КАЖЕТСЯ»','at');return g;},
+'2D':()=>{let g=R(0,0,320,180,'khull');
+  for(let i=0;i<7;i++)g+=L(10,40+i*18,150,36+i*18,'k1');
+  g+=L(160,0,160,180,'amd');
+  const r=rng(9);for(let i=0;i<9;i++)g+=E(f(176+r()*130),f(40+r()*120),f(8+r()*16),f(5+r()*9),'kblot',f(r()*60-30));
+  g+=P('M190,60 q20,-14 40,0 t40,0 M200,120 q16,10 32,0 t32,0 M180,150 q24,-18 48,0','k1');
+  g+=lm(14,172,-12,'скользящий низко');
+  g+=T(12,22,'МАСТЕР','at')+T(172,22,'ВЕДУЩИЙ','at');return g;},
+'3A':()=>{let g=R(0,0,320,180,'kdark');
+  g+=P('M0,96 L320,84 L320,180 L0,180 Z','kleather')+dots(31,40,0,96,320,180,0.6,1.2,'kgrain');
+  g+=R(96,0,128,28,'kmetal',6)+R(150,28,20,26,'kmetal',3);
+  g+=L(160,54,160,104,'kthick')+R(134,82,52,16,'kmetal',4);
+  g+=P('M0,138 L156,104','kstitch');
+  g+=arrow(60,166,130,150,'am');
+  g+=lm(304,130,182,'соты низко','end')+lm(14,16,40,'софт сверху');
+  g+=T(12,64,'РОВНЫЙ ШОВ МАСТЕРА','at');return g;},
+'3B':()=>{let g=interior(5);
+  g+=person(100,80,0.78,{cap:1,apron:1,mouth:'flat'});
+  g+=person(206,98,0.82,{mouth:'flat',brows:'worry'});
+  g+=R(20,132,280,48,'kp')+L(20,132,300,132,'kthick');
+  g+=P('M70,132 L70,92 Q70,80 82,80 L170,80 Q182,80 182,92 L182,114 L166,114 L166,96 L86,96 L86,132 Z','kmetal');
+  g+=L(174,114,174,128,'kthick')+C(158,84,5,'klamp');
+  g+=lm(14,30,30,'ключ · большой софт')+lm(300,150,190,'лампа машинки','end');
+  g+=T(12,22,'ВЕДУЩИЙ ЗА МАШИНКОЙ','at');return g;},
+'3C':()=>{let g=R(0,0,320,180,'kleather')+dots(33,70,0,0,320,180,0.6,1.3,'kgrain');
+  g+=L(20,62,300,62,'kstitch');
+  g+=P('M20,122 Q60,98 100,126 T180,116 T260,132 T300,110','kstitch');
+  g+=lm(306,170,-156,'соты низко','end');
+  g+=T(20,44,'МАСТЕР','at')+T(20,156,'ВЕДУЩИЙ','at');return g;},
+'3D':()=>{let g=interior(6)+R(0,0,320,180,'kdark');
+  g+=person(160,116,1.95,{mouth:'o',brows:'up'});
+  g+=lm(14,70,10,'ключ')+lm(304,150,200,'лампа','end');
+  g+=T(12,22,'«КАЖДЫЙ ШОВ ДВАЖДЫ»','at');return g;},
+'4A':()=>{let g=R(0,0,320,180,'kbody');
+  g+=P('M0,34 L320,14 L320,30 L0,52 Z','krefl')+P('M0,70 L320,52 L320,60 L0,80 Z','krefl');
+  g+=P('M0,126 L240,108','kgold');
+  g+=L(244,106,292,40,'kthick')+C(296,36,14,'kp')+P('M240,108 L246,100','k');
+  g+=arrow(50,160,190,146,'am');
+  g+=lm(150,172,-90,'трубки → полосы в глянце');
+  g+=T(12,22,'СЛАЙДЕР ЗА КИСТЬЮ','at');return g;},
+'4B':()=>{let g=interior(7);
+  g+=limb('M196,108 Q180,90 186,58',10)+limb('M262,108 Q280,90 274,58',10);
+  g+=person(230,96,0.8,{mouth:'flat',brows:'up'});
+  g+=mitt(186,54,16,24,-10)+mitt(274,54,16,24,10);
+  g+=R(-4,112,330,42,'kbody')+L(0,128,320,124,'kgold');
+  g+=personBack(66,118,1.5,true);
+  g+=lm(304,60,170,'ключ','end');
+  g+=T(110,22,'«НЕТ. ЭТО Я ТРОГАТЬ НЕ БУДУ»','at');return g;},
+'4C':()=>{let g=R(0,0,320,180,'kbody');
+  g+=P('M0,40 L320,20 L320,34 L0,56 Z','krefl');
+  g+=P('M0,128 L320,92','kgold');
+  g+=P('M200,92 L205,103 L216,106 L205,109 L200,120 L195,109 L184,106 L195,103 Z','kglint');
+  g+=arrow(120,142,250,128,'am');
+  g+=lm(304,164,200,'жёсткий контр','end');
+  g+=T(12,22,'БЛИК БЕЖИТ ПО ЛИНИИ','at');return g;},
+'5A':()=>{let g=interior(8);
+  g+=person(196,84,0.74,{mouth:'smile'});
+  g+=carBody(166,150,1.25,1);
+  g+=carrow(244,60,252,90,236,108,'am');
+  g+=lm(304,22,150,'контр на корпус','end')+lm(14,70,10,'ключ');
+  g+=T(12,22,'САДИТСЯ В МАШИНУ','at');return g;},
+'5B':()=>{let g=interior(9);
+  g+=person(160,108,1.6,{mouth:'smile'});
+  g+=P('M0,146 Q160,130 320,146 L320,180 L0,180 Z','kbody')+L(0,160,320,152,'kgold');
+  g+=E(160,172,64,14,'kwheel');
+  g+=lm(14,60,14,'ключ · панель')+lm(304,20,150,'контр','end');
+  g+=T(12,22,'«ТЕПЕРЬ Я ПОНИМАЮ…»','at');return g;},
+'5C':()=>{let g=interior(10);
+  g+=carBody(90,118,0.6,1)+carBody(236,116,0.6,-1);
+  [[48,128],[110,124],[168,130],[224,124],[284,128]].forEach(([x,y],i)=>g+=person(x,y,0.42,{cap:i%2===0,apron:1,mouth:'smile'}));
+  g+=lm(304,20,150,'контр','end');
+  g+=T(12,22,'ПЕРЕБИВКИ ПОД ТЕКСТ','at');return g;},
+'5D':()=>{let g=R(0,0,320,180,'kwall')+R(0,112,320,68,'kfloor')+L(0,112,320,112,'k1');
+  [[60,10],[130,10],[200,10],[260,10],[90,40],[160,40],[230,40]].forEach(([x,y])=>g+=R(x-16,y,32,4,'klamp',2));
+  [-120,-20,80,160,240,340,440].forEach(bx=>g+=L(160+(bx-160)*0.35,112,bx,180,'k1'));
+  g+=P('M84,30 L150,128 L118,128 Z','kbeam')+P('M236,30 L170,128 L202,128 Z','kbeam');
+  g+=C(84,28,6,'klamp')+C(236,28,6,'klamp');
+  g+=carBody(160,132,0.62,1)+C(158,104,4,'kp');
+  [[62,128],[96,124],[226,124],[262,128],[290,132]].forEach(([x,y])=>g+=person(x,y,0.3,{apron:1}));
+  g+=R(70,40,180,104,'amd');
+  g+=arrow(66,38,24,12)+arrow(254,38,296,12)+arrow(66,146,24,170)+arrow(254,146,296,170);
+  g+=T(160,166,'ОТЪЕЗД ДО ВСЕГО ЦЕХА','at','middle');return g;}
+};
+
+/* top-down plans 400x240 */
+function chip(x,y,lb){return C(x,y,7,'dchip')+T(x,y+3,lb,'dchipt','middle');}
+function wedge(x,y,ang,len,fov,cls){const r=ang*Math.PI/180,h=fov/2*Math.PI/180;const a=[x+len*Math.cos(r-h),y+len*Math.sin(r-h)],b=[x+len*Math.cos(r+h),y+len*Math.sin(r+h)];return `<path d="M${f(x)},${f(y)} L${f(a[0])},${f(a[1])} A${len},${len} 0 0 1 ${f(b[0])},${f(b[1])} Z" class="${cls}"/>`;}
+function cam(x,y,ang,len,fov,label,lx,ly,an){return wedge(x,y,ang,len,fov,'dcone')+R(x-5,y-3.5,10,7,'dcam',1,`transform="rotate(${ang} ${f(x)} ${f(y)})"`)+(label?T(lx,ly,label,'dl',an):'');}
+function lamp(x,y,ang,len,spr,type,label,lx,ly,an){let g=wedge(x,y,ang,len,spr,'dbeam');
+  if(type==='soft')g+=R(x-4,y-13,8,26,'dlamp',1,`transform="rotate(${ang} ${f(x)} ${f(y)})"`);
+  else g+=R(x-5,y-5,10,10,'dlamp',2,`transform="rotate(${ang} ${f(x)} ${f(y)})"`);
+  return g+(label?T(lx,ly,label,'dlt',an):'');}
+function tube(x1,y1,x2,y2){return L(x1,y1,x2,y2,'dtubeo')+L(x1,y1,x2,y2,'dtube');}
+function darrow(x1,y1,x2,y2){return L(x1,y1,x2,y2,'darr')+head(x2,y2,Math.atan2(y2-y1,x2-x1),'darrh');}
+function dcarrow(x1,y1,cx,cy,x2,y2){return `<path d="M${x1},${y1} Q${cx},${cy} ${x2},${y2}" class="darr"/>`+head(x2,y2,Math.atan2(y2-cy,x2-cx),'darrh');}
+const DG={
+1:()=>{let g=R(0,0,400,240,'dfloor')+R(0,0,400,80,'dinside');
+  g+=R(0,76,140,8,'dwallt')+R(260,76,140,8,'dwallt');
+  [[90,30],[200,24],[310,30],[150,56],[250,56]].forEach(([x,y])=>g+=C(x,y,4,'dprac'));
+  g+=T(200,14,'цех: свет внутри включён · контр','dl','middle');
+  g+=R(178,100,44,38,'ddiff')+T(226,104,'рама, если солнце','dl');
+  g+=dcarrow(200,110,206,80,200,38)+T(208,46,'1B · за ведущим','dl');
+  g+=L(120,154,148,132,'dreflo')+L(120,154,148,132,'drefl')+T(112,170,'отражатель','dlt','middle');
+  g+=chip(200,118,'В');
+  g+=cam(200,206,-90,74,38,'1A',214,224);
+  g+=T(10,232,'фасад в тени: время по солнцу','dl');
+  return g;},
+2:()=>{let g=R(0,0,400,240,'dfloor');
+  g+=lamp(350,26,148,150,26,'hard','контр · COB без диффузии',392,16,'end');
+  g+=lamp(66,214,-37,120,44,'soft','ключ · софтбокс',14,236);
+  g+=P('M80,128 L250,136 L250,156 L80,164 Z','dbeam')+tube(78,126,78,166)+T(70,120,'скользящий · трубка','dlt','middle');
+  g+=R(90,124,230,44,'dhull',20)+T(300,150,'корпус','dl','end');
+  g+=chip(170,102,'М')+chip(242,102,'В');
+  g+=L(236,190,266,176,'dflag')+T(270,192,'флаг','dl');
+  g+=cam(200,222,-90,100,34,'2B',212,236);
+  g+=cam(150,190,-70,38,40,'2A · 2D',136,204,'end');
+  g+=cam(286,206,-104,96,26,'2C',300,214);
+  return g;},
+3:()=>{let g=R(0,0,400,240,'dfloor');
+  g+=lamp(84,40,27,120,62,'soft','ключ · большой софт сверху-сбоку',14,16);
+  g+=lamp(310,132,182,90,18,'hard','макро · соты',318,154);
+  g+=L(338,56,338,116,'dflag')+T(344,90,'флаг','dl');
+  g+=R(110,94,190,60,'dobj',4)+T(118,148,'стол','dl');
+  g+=R(166,102,64,26,'dmach',4)+C(220,110,4,'dprac');
+  g+=chip(198,76,'В')+chip(142,52,'М');
+  g+=cam(200,220,-90,108,34,'3B',212,234);
+  g+=cam(252,170,-136,46,40,'3A · 3C',262,184);
+  g+=cam(146,204,-70,116,22,'3D',132,218,'end');
+  return g;},
+4:()=>{let g=R(0,0,400,240,'dfloor');
+  g+=lamp(130,36,18,96,38,'soft','ключ на ведущего',20,22);
+  g+=lamp(380,64,146,84,22,'hard','контр · искра',392,46,'end');
+  g+=R(60,98,290,50,'dbody',20)+L(72,118,338,118,'dgold')+T(338,140,'глянец','dl','end');
+  g+=chip(230,76,'В')+chip(252,168,'М');
+  g+=L(90,184,226,184,'dslider')+head(226,184,0,'darrh');
+  g+=cam(150,182,-86,30,46,'',0,0);
+  g+=T(84,178,'4A · 4C слайдер','dl','end');
+  g+=tube(80,206,210,206)+tube(80,218,210,218)+T(216,214,'трубки → полосы','dlt');
+  g+=L(40,232,300,232,'dflag')+T(304,236,'чёрная ткань','dl');
+  g+=cam(300,212,-113,124,30,'4B',314,206);
+  return g;},
+5:()=>{let g=R(0,0,400,240,'dfloor');
+  for(let x=40;x<400;x+=80)for(let y=20;y<120;y+=50)g+=C(x,y,3.5,'dprac');
+  g+=lamp(100,16,48,110,30,'hard','контр',86,12,'end')+lamp(300,16,132,110,30,'hard','контр',314,12);
+  g+=R(146,100,108,40,'dbody',16)+chip(186,120,'В');
+  [[118,74],[156,62],[200,58],[244,62],[282,74]].forEach(([x,y])=>g+=chip(x,y,'Т'));
+  g+=lamp(96,184,-35,84,40,'soft','ключ · 5A 5B, убрать на 5D',10,206);
+  g+=cam(266,174,-143,64,40,'5A · 5B',278,188);
+  g+=L(200,166,200,224,'darr')+head(200,226,Math.PI/2,'darrh');
+  g+=cam(200,170,-90,60,70,'5D · отъезд',210,236);
+  return g;}
+};
+
+/* data */
+const SCENES=[
+ {n:1,name:'Ворота цеха',tc:'0:00–0:08',d:8,m:'m1',mat:'улица',quote:'«Меня пустили на фабрику, где делают джеткары. Это машины, которые плавают. Попробую собрать хотя бы кусочек».',focus:'Ведущий говорит в камеру, затем уходит в цех, камера за ним.',
+  light:['<b>Фасад в тени.</b> Снимать, когда солнце ушло с ворот. Если нет, рама диффузии над ведущим.','<b>Ключ:</b> отражатель или панель 5600K спереди-слева.','<b>Контр:</b> свет цеха в проёме ворот. Включить всё, иначе проём провалится в черноту.','Экспозиция по лицу, улица может переэкспонироваться на ступень.']},
+ {n:2,name:'Шлифовка корпуса',tc:'0:08–0:20',d:12,m:'m2',mat:'стеклопластик',quote:'«Так, ладно, это сложнее, чем кажется».',focus:'Мастер показывает, ведущий пробует.',
+  light:['<b>Контр:</b> COB без диффузии сзади-справа, против камеры. Пыль от шлифовки светится.','<b>Скользящий:</b> LED-трубка у торца корпуса, свет вдоль поверхности. Видна каждая неровность, поэтому видно и провал ведущего.','<b>Ключ:</b> софтбокс спереди-слева на лица.','<b>Флаг</b> у камеры, чтобы контр не бил в объектив.']},
+ {n:3,name:'Прострочка кожи',tc:'0:20–0:32',d:12,m:'m3',mat:'кожа',quote:'«Всё, я понял, почему тут каждый шов проверяют дважды».',focus:'Ведущий кривит шов.',
+  light:['<b>Ключ:</b> большой софтбокс сверху-сбоку. Кожа мягкая, без бликов.','<b>Макро:</b> маленькая панель с сотами низко сбоку. Строчка получает рельеф.','<b>Флаг</b> с другой стороны для объёма.','Лампа швейной машинки в кадре работает как практик.']},
+ {n:4,name:'Золотая линия',tc:'0:32–0:42',d:10,m:'m4',mat:'глянец и золото',quote:'«Нет. Это я трогать не буду».',focus:'Мастер ведёт линию идеально ровно, ведущий даже не берётся.',
+  light:['<b>Глянец отражает всё.</b> Две LED-трубки за камерой параллельно борту дают чистые полосы.','<b>Чёрная ткань</b> за камерой и слайдером: в корпусе не отражаются люди и техника.','<b>Контр:</b> маленький жёсткий прибор в дальнем конце даёт искру на золоте.','<b>Ключ</b> на ведущего для 4B ставить вне отражения в корпусе.']},
+ {n:5,name:'В готовом джеткаре',tc:'0:42–0:55',d:13,m:'m5',mat:'финал',quote:'«Больше ста человек, пять лет работы и больше пятисот таких машин по всему миру. Теперь я понимаю, почему их делают именно здесь».',focus:'Финал широким кадром.',
+  light:['<b>Контр:</b> два COB за командой, направлены на машину. Корпус получает обводку.','<b>Свет цеха</b> включён весь: глубина широкого кадра.','<b>Ключ:</b> панель спереди-слева для 5A и 5B, на 5D убрать из кадра.','Лёгкий дым для объёма лучей, только с разрешения фабрики.']}
+];
+const SHOTS=[
+ {id:'1A',s:1,dur:'≈5 с',fps:25,title:'Ведущий у ворот',plan:'Средний, ворота и цех за спиной',lens:'35 мм',cam:'Штатив или гимбал на уровне глаз',light:'Тень фасада, отражатель слева, цех в контре',note:'Реплику снять целиком 2–3 раза, потом по фразам для монтажа.'},
+ {id:'1B',s:1,dur:'≈3 с',fps:25,title:'Проход в цех',plan:'Общий, со спины',lens:'24 мм',cam:'Гимбал за ведущим через ворота',light:'Экспозиция переходит с улицы на цех: выставить по цеху, ирис плавно',note:'Перепад яркости на пороге большой. Можно резать на темноте ворот.'},
+ {id:'2A',s:2,dur:'≈2 с',fps:50,title:'Руки мастера, пыль',plan:'Макро, шлифмашинка на корпусе',lens:'Макро 90–100 мм',cam:'Штатив, низко к поверхности',light:'Контр против камеры, скользящий вдоль корпуса',note:'50 fps и 1/100: мерцания нет, пыль плывёт.'},
+ {id:'2B',s:2,dur:'≈3 с',fps:25,title:'Мастер показывает',plan:'Средний двухплан',lens:'35 мм',cam:'Через корпус, на уровне груди',light:'Софтбокс слева на лица, контр сзади',note:'Ведущий в очках и перчатках, мастер без лишних движений.'},
+ {id:'2C',s:2,dur:'≈4 с',fps:25,title:'Ведущий пробует',plan:'Крупный, лицо',lens:'50–85 мм',cam:'С рук, чуть ниже глаз',light:'Тот же ключ, контр даёт пыль за головой',note:'Провал. Держать 2 секунды после реплики.'},
+ {id:'2D',s:2,dur:'≈2 с',fps:25,title:'Результат: ровно и неровно',plan:'Макро, поверхность',lens:'Макро 90–100 мм',cam:'Штатив, почти параллельно поверхности',light:'Только скользящий, остальное выключить',note:'Снять участок мастера и участок ведущего одинаково, для склейки рядом.'},
+ {id:'3A',s:3,dur:'≈3 с',fps:50,title:'Игла и ровная строчка',plan:'Макро',lens:'Макро 90–100 мм',cam:'Штатив сбоку от лапки',light:'Соты низко сбоку, софт сверху',note:'Фокус на точке прокола. 50 fps и 1/100.'},
+ {id:'3B',s:3,dur:'≈3 с',fps:25,title:'Ведущий за машинкой',plan:'Средний, мастер за плечом',lens:'35 мм',cam:'Спереди через стол',light:'Большой софт сверху-сбоку, лампа машинки',note:'Шьёт на обрезке кожи, не на детали.'},
+ {id:'3C',s:3,dur:'≈2 с',fps:25,title:'Два шва рядом',plan:'Макро сверху',lens:'Макро 90–100 мм',cam:'Сверху, строго перпендикулярно',light:'Соты низко, флаг с другой стороны',note:'Сравнение должно читаться за секунду.'},
+ {id:'3D',s:3,dur:'≈4 с',fps:25,title:'«Каждый шов дважды»',plan:'Крупный, лицо',lens:'50–85 мм',cam:'С рук, на уровне глаз',light:'Ключ слева, лампа машинки подсвечивает снизу',note:'Провал. Держать 2 секунды после реплики.'},
+ {id:'4A',s:4,dur:'≈4 с',fps:50,title:'Кисть ведёт линию',plan:'Макро вдоль борта',lens:'Макро 90–100 мм',cam:'Слайдер параллельно борту, скорость кисти',light:'Трубки дают полосы в глянце, чёрная ткань вокруг',note:'Слайдер ставить вне отражения. 3–4 дубля, мастер ведёт на тестовой панели, если можно.'},
+ {id:'4B',s:4,dur:'≈4 с',fps:25,title:'«Это я трогать не буду»',plan:'Средний через плечо мастера',lens:'35–50 мм',cam:'За мастером, ведущий по ту сторону корпуса',light:'Ключ на ведущего вне отражения',note:'Ведущий отступает и поднимает руки. Держать 2 секунды.'},
+ {id:'4C',s:4,dur:'≈2 с',fps:25,title:'Блик по золоту',plan:'Макро, готовая линия',lens:'Макро 90–100 мм',cam:'Медленный слайдер или ручной наклон',light:'Жёсткий контр в дальнем конце',note:'Блик бежит вдоль линии при движении камеры.'},
+ {id:'5A',s:5,dur:'≈3 с',fps:25,title:'Садится в джеткар',plan:'Средний',lens:'35 мм',cam:'Сбоку-спереди на уровне борта',light:'Контр на корпус, панель слева на лицо',note:'Одно движение, без задержки у двери.'},
+ {id:'5B',s:5,dur:'≈4 с',fps:25,title:'Ведущий в кабине',plan:'Крупный',lens:'50 мм',cam:'Спереди, чуть выше руля',light:'Панель слева, контр сзади',note:'Начало финальной реплики. Можно продолжить её закадром.'},
+ {id:'5C',s:5,dur:'≈3 с',fps:50,title:'Люди и машины',plan:'Перебивки, средние и общие',lens:'24–50 мм',cam:'Гимбал, короткие проходы',light:'Свет цеха и контр',note:'Под «больше ста человек» и «пятисот машин». Снимать, пока команда собрана.'},
+ {id:'5D',s:5,dur:'≈3 с',fps:25,title:'Широкий финал',plan:'Общий: машина, ведущий, команда, цех',lens:'16–24 мм',cam:'Отъезд гимбалом или на тележке',light:'Два контра на машину, весь свет цеха',note:'Ключевую панель убрать из кадра. Держать до последнего слова.'}
+];
+
+const SVGF=(id,title)=>`<svg viewBox="0 0 320 180" class="sk" role="img" aria-label="Кадр ${id}: ${title}">${FR[id]()}</svg>`;
+let html='';
+SCENES.forEach(sc=>{
+  const shots=SHOTS.filter(s=>s.s===sc.n);
+  html+=`<section class="scene" id="s${sc.n}"><header class="shead"><span class="snum">${sc.n}</span><div class="stxt"><h2>${sc.name}</h2><p class="smeta"><span>${sc.tc}</span><span><i class="chipm ${sc.m}"></i>${sc.mat}</span><span>${shots.length} кадр${shots.length>4?'ов':'а'}</span></p><p class="quote">${sc.quote}</p><p class="focus">${sc.focus}</p></div></header>
+  <div class="grid"><article class="card lplan"><h3>Свет и схема <small>вид сверху · ${shots.map(s=>s.id).join(' ')}</small></h3><figure class="frame"><svg viewBox="0 0 400 240" class="sk dg" role="img" aria-label="Схема света: ${sc.name}">${DG[sc.n]()}</svg></figure><ul>${sc.light.map(l=>`<li>${l}</li>`).join('')}</ul></article>
+  ${shots.map(s=>`<article class="card"><div class="ch"><span class="sid ${sc.m}">${s.id}</span><span class="dur">${s.dur}</span><span class="fps${s.fps>25?' hi':''}">${s.fps} fps</span></div><figure class="frame">${SVGF(s.id,s.title)}</figure><h4>${s.title}</h4><dl class="spec"><dt>План</dt><dd>${s.plan}</dd><dt>Объектив</dt><dd>${s.lens}</dd><dt>Камера</dt><dd>${s.cam}</dd><dt>Свет</dt><dd class="lt">${s.light}</dd></dl><p class="note">${s.note}</p></article>`).join('')}
+  </div></section>`;
+});
+document.getElementById('board').innerHTML=html;
+document.getElementById('tl').innerHTML=SCENES.map(sc=>`<a href="#s${sc.n}" class="${sc.m}" style="--d:${sc.d}" title="${sc.n}. ${sc.name} · ${sc.tc}">${sc.n}<span>${sc.name}</span></a>`).join('');
+const lg=(w,h,inner)=>`<svg class="sk dg" style="width:${w}px;height:${h}px" viewBox="0 0 ${w} ${h}" aria-hidden="true">${inner}</svg>`;
+document.getElementById('key').innerHTML=[
+  `<span>${lg(18,18,chip(9,9,'В'))}ведущий</span>`,
+  `<span>${lg(18,18,chip(9,9,'М'))}мастер</span>`,
+  `<span>${lg(18,18,chip(9,9,'Т'))}команда</span>`,
+  `<span>${lg(40,22,wedge(4,11,0,34,40,'dcone')+R(0,7.5,10,7,'dcam',1))}камера</span>`,
+  `<span>${lg(40,22,wedge(6,11,0,34,40,'dbeam')+R(2,-2,8,26,'dlamp',1))}свет, мягкий</span>`,
+  `<span>${lg(40,22,wedge(6,11,0,34,24,'dbeam')+R(1,6,10,10,'dlamp',2))}свет, жёсткий</span>`,
+  `<span>${lg(40,22,tube(6,11,34,11))}LED-трубка</span>`,
+  `<span>${lg(40,22,L(6,11,34,11,'dflag'))}флаг, чёрная ткань</span>`,
+  `<span>${lg(40,24,`<g class="sk">${lm(6,12,0,'')}</g>`)}в кадре: откуда свет</span>`
+].join('');
+})();
+</script>
